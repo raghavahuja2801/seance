@@ -1,0 +1,19 @@
+{
+  "name": "seance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Halloween demo: talk to ghosts on a Ouija board, powered by a Fish Audio voice agent speaking with Drama 3.",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "provision": "node --env-file=.env scripts/provision.ts",
+    "test": "node --test \"test/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
+}
