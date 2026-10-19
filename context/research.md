@@ -59,3 +59,4 @@
 - **Final:** bed 0.033, violent creak 0.080 (+7.7 dB over the bed), ducked bed 0.012 (-8.8 dB), muted 0, peak 0.45 (no clipping).
 - Not checked: how it sounds to a human. Next play-test.
 - **After the first listen (user: "reduce the volume for the bg effects slightly"):** master level 0.9 → 0.6 (about −3.5 dB). Bed 0.022, violent creak 0.053, peak 0.30. All checks still pass.
+- **Removed the planchette "tap" on each letter** (user: "I don't like the tap sound… remove it completely"). Only the soft slide remains.

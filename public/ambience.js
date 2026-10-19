@@ -112,8 +112,6 @@ export function createAmbience(ctx = new AudioContext()) {
     },
     /** The planchette sliding over wood toward the next letter. */
     slide(seconds = 0.9) { burst({ type: 'bandpass', freq: 380, q: 0.7, gain: 0.05, attack: seconds * 0.4, decay: seconds * 0.6, sweepTo: 260 }); },
-    /** The planchette settling on a letter. */
-    tick() { burst({ type: 'bandpass', freq: 1700, q: 3, gain: 0.25, attack: 0.002, decay: 0.05 }); },
     creak(intensity) {
       const t = now();
       // A strained wooden creak: a rough low saw, wobbling in pitch, through a nasal band.

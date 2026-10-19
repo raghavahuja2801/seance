@@ -58,7 +58,7 @@ Add `?debug` to the URL to see raw transcript and tool events in a corner panel.
 
 Everything is synthesized in the browser (`public/ambience.js`). There are no audio files:
 - a low drone and wind that sink under the spirit's voice;
-- a hiss when a candle goes out, a wooden slide and click as the planchette moves, a creak or thud when the room shakes;
+- a hiss when a candle goes out, a soft wooden slide as the planchette moves, a creak or thud when the room shakes;
 - a warm chord for peace and a low dissonant hit for wrath.
 
 The speaker button top-right mutes it (remembered per browser). To check levels after changing it:

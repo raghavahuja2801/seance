@@ -83,7 +83,6 @@ function spell(raw) {
       movePlanchette(spots[step]);
       ambience?.slide(0.9);
       await sleep(950);
-      ambience?.tick();
       glyphs[step].classList.add('lit');
       $('spelled').textContent += step;
       await sleep(450);
