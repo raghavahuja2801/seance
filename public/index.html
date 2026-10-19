@@ -3,54 +3,103 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07050a">
   <title>Séance</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c3 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10z' fill='%23ffb347'/%3E%3Crect x='12' y='17' width='8' height='13' rx='1.5' fill='%23f4ead2'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="seance.css">
 </head>
-<body>
+<body aria-busy="true">
+  <div class="brand">
+    <a href="https://fish.audio" target="_blank" rel="noopener" aria-label="Fish Audio (opens in a new tab)">
+      <img class="logo-fish" src="brand/fish-audio-logo.png" alt="Fish Audio" width="1276" height="161">
+    </a>
+    <span class="brand-x" aria-hidden="true">×</span>
+    <a href="https://livekit.io" target="_blank" rel="noopener" aria-label="LiveKit (opens in a new tab)">
+      <img class="logo-livekit" src="brand/livekit-logo.svg" alt="LiveKit" width="841" height="189">
+    </a>
+  </div>
+
+  <!-- Atmosphere: fixed layers behind everything -->
+  <div class="fog fog-a" aria-hidden="true"></div>
+  <div class="fog fog-b" aria-hidden="true"></div>
+  <canvas id="dust" class="dust" aria-hidden="true"></canvas>
+  <div class="candlelight" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
 
-  <!-- 1. Choose a spirit -->
-  <section id="summon" class="screen active">
-    <h1>Séance</h1>
-    <p class="lede">Light the candles. Lay your fingers on the planchette. Choose whom to call&nbsp;back.</p>
-    <ul id="ghosts" class="ghosts" aria-label="Spirits"></ul>
-    <p class="fine">You will need a microphone. Speak to the spirit; it will answer. Learn how it truly died, and it may find&nbsp;peace.</p>
-  </section>
+  <!-- 0. Loading -->
+  <div id="loader" class="loader" role="status" aria-live="polite">
+    <div class="loader-candle" aria-hidden="true"><div class="flame"></div></div>
+    <p id="loader-text" class="loader-text">Drawing the curtains…</p>
+    <div class="loader-bar" aria-hidden="true"><span id="loader-fill"></span></div>
+    <button id="loader-retry" class="loader-retry" hidden>Try again</button>
+  </div>
 
-  <!-- 2. The séance -->
-  <section id="room" class="screen" aria-live="polite">
-    <header class="room-head">
-      <h2 id="ghost-name"></h2>
-      <p id="status" class="status">Reaching across the veil…</p>
-    </header>
+  <main>
+    <!-- 1. Choose a spirit -->
+    <section id="summon" class="screen" aria-labelledby="title">
+      <h1 id="title">Séance</h1>
+      <p class="lede">Light the candles. Lay your fingers on the planchette. Choose whom to call&nbsp;back.</p>
+      <ul id="ghosts" class="ghosts" aria-label="Spirits"></ul>
+      <p class="fine">Speak to the spirit, and it will answer in its own voice. Learn how it truly died, and it may find&nbsp;peace.</p>
+    </section>
 
-    <div class="table">
-      <div class="candles" id="candles" aria-hidden="true"></div>
-      <div class="board" id="board" role="img" aria-label="Ouija board">
-        <div class="sun" aria-hidden="true">☀</div>
-        <div class="moon" aria-hidden="true">☾</div>
-        <div class="planchette" id="planchette" aria-hidden="true"><span class="lens"></span></div>
+    <!-- 2. The séance -->
+    <section id="room" class="screen" aria-labelledby="ghost-name">
+      <header class="room-head">
+        <h2 id="ghost-name"></h2>
+        <p id="status" class="status" aria-live="polite">Reaching across the veil…</p>
+      </header>
+
+      <div class="table">
+        <div class="candles" id="candles" aria-hidden="true"></div>
+        <div class="board-tilt">
+          <div class="board" id="board" role="img" aria-label="Ouija board">
+            <svg class="ornament" viewBox="0 0 155 100" preserveAspectRatio="none" aria-hidden="true">
+              <rect x="3" y="3" width="149" height="94" rx="9" />
+              <rect x="5.5" y="5.5" width="144" height="89" rx="7" />
+            </svg>
+            <div class="sun" aria-hidden="true">
+              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="7"/><g>
+                <path d="M20 3v7M20 30v7M3 20h7M30 20h7M8 8l5 5M27 27l5 5M32 8l-5 5M13 27l-5 5"/></g></svg>
+            </div>
+            <div class="moon" aria-hidden="true">
+              <svg viewBox="0 0 40 40"><path d="M26 6a14 14 0 1 0 8 22A11 11 0 1 1 26 6z"/></svg>
+            </div>
+            <div class="planchette" id="planchette" aria-hidden="true">
+              <svg viewBox="0 0 100 120">
+                <defs>
+                  <radialGradient id="bone" cx="50%" cy="35%" r="70%">
+                    <stop offset="0" stop-color="#f6ead0"/><stop offset=".7" stop-color="#cdb48a"/><stop offset="1" stop-color="#9c8158"/>
+                  </radialGradient>
+                </defs>
+                <path class="body" d="M50 4C72 30 96 58 92 88c-3 20-22 28-42 28S11 108 8 88C4 58 28 30 50 4z" fill="url(#bone)"/>
+                <circle class="lens" cx="50" cy="62" r="17"/>
+                <path class="glint" d="M40 54a12 12 0 0 1 9-6"/>
+              </svg>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="captions">
-      <p id="you" class="you"></p>
-      <p id="spirit" class="spirit"></p>
-      <p id="spelled" class="spelled" aria-label="Spelled on the board"></p>
-    </div>
+      <div class="captions">
+        <p id="you" class="you"></p>
+        <p id="spirit" class="spirit" aria-live="polite"></p>
+        <p id="spelled" class="spelled" aria-label="Spelled on the board"></p>
+      </div>
 
-    <button id="end" class="end">Close the circle</button>
-  </section>
+      <button id="end" class="end">Close the circle</button>
+    </section>
 
-  <!-- 3. Ending -->
-  <section id="ending" class="screen">
-    <h2 id="ending-title"></h2>
-    <p id="ending-text" class="lede"></p>
-    <button id="again">Summon another</button>
-  </section>
+    <!-- 3. Ending -->
+    <section id="ending" class="screen" aria-labelledby="ending-title">
+      <h2 id="ending-title"></h2>
+      <p id="ending-text" class="lede"></p>
+      <button id="again">Summon another</button>
+    </section>
+  </main>
 
   <pre id="debug" class="debug" hidden></pre>
   <script type="module" src="seance.js"></script>

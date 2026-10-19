@@ -21,7 +21,7 @@ export const GHOSTS: Ghost[] = [
   {
     id: 'eleanor',
     name: 'Eleanor Vale',
-    epitaph: 'Governess of Ashgrove House · 1859–1887 · "Fell through the ice"',
+    epitaph: 'Governess of Ashgrove House · 1859–1887 · “Fell through the ice”',
     voiceId: '14a35dc1f1024e61a69cab445c0a8f7d',
     firstMessage: '[a thin, frightened whisper, as if from under water] Is someone there? [shivering breath] It is so... very... cold.',
     persona:
@@ -39,8 +39,8 @@ export const GHOSTS: Ghost[] = [
   },
   {
     id: 'lou',
-    name: 'Lou "Velvet" Delacroix',
-    epitaph: 'Songbird of the Blue Lantern, Chicago · 1901–1926 · "Too much gin"',
+    name: 'Lou “Velvet” Delacroix',
+    epitaph: 'Songbird of the Blue Lantern, Chicago · 1901–1926 · “Too much gin”',
     voiceId: '9dc77337699140d0b19a5686c2400383',
     firstMessage: '[slow, smoky, amused, half-singing] Well, well... [soft laugh] somebody finally bought a girl a drink.',
     persona:
@@ -59,7 +59,7 @@ export const GHOSTS: Ghost[] = [
   {
     id: 'silas',
     name: 'Silas Crane',
-    epitaph: 'Keeper of the Gull Rock Light · 1841–1903 · "Lost in the great storm"',
+    epitaph: 'Keeper of the Gull Rock Light · 1841–1903 · “Lost in the great storm”',
     voiceId: '00731df901a74de5b9b000713f14718c',
     firstMessage: '[gravelly, wary, an old sea-dog peering into the dark] Who rows out to Gull Rock on a night like this? [wind-weary sigh] Speak up.',
     persona:
