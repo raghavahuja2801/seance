@@ -241,3 +241,14 @@ body.wrath #ending-title { color: var(--blood); text-shadow: 0 0 28px rgba(208,2
   .ghosts li { opacity: 1; }
   .planchette { transition-duration: .2s; }
 }
+
+/* ---------- Sound toggle ---------- */
+.mute {
+  position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); z-index: 60;
+  width: 44px; height: 44px; padding: 10px; min-height: 0; border-color: transparent; background: transparent; opacity: .75;
+}
+.mute:hover { opacity: 1; box-shadow: none; }
+.mute svg { width: 100%; height: 100%; fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mute .cross { display: none; }
+.mute[aria-pressed="true"] .waves { display: none; }
+.mute[aria-pressed="true"] .cross { display: inline; }

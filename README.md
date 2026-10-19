@@ -18,7 +18,8 @@ npm run provision           # creates/publishes the agent; copy SEANCE_AGENT_ID 
 - [x] Séance page (PR 3)
 - [x] Ghost tool tuning + write-up (PR 4)
 - [x] Immersive UI: loading screen, co-branding, mobile (PR 5)
-- [ ] Ambient sound (PR 6)
+- [x] Ambient sound (PR 6)
+- [ ] More stories (PR 7)
 
 Cost: agent minutes are billed at about $0.06/min to the workspace that owns the key.
 
@@ -52,3 +53,17 @@ Add `?debug` to the URL to see raw transcript and tool events in a corner panel.
 ## Tuning the ghosts
 
 `node --env-file=.env scripts/eval-tools.ts [repeat]` runs platform tool tests for every ghost against the draft and prints a pass table (see `context/research.md` R-6). Re-run it after any change to `src/ghosts.ts` or the tool descriptions in `src/agent.ts`, then `npm run provision`.
+
+## Sound
+
+Everything is synthesized in the browser (`public/ambience.js`). There are no audio files:
+- a low drone and wind that sink under the spirit's voice;
+- a hiss when a candle goes out, a soft wooden slide as the planchette moves, a creak or thud when the room shakes;
+- a warm chord for peace and a low dissonant hit for wrath.
+
+The speaker button top-right mutes it (remembered per browser). To check levels after changing it:
+
+```bash
+npm start   # in another terminal
+node scripts/check-ambience.cjs <path-to-playwright>   # e.g. ../../repos/platform-web/node_modules/playwright
+```
