@@ -2,6 +2,9 @@
 // Create it from a user gesture (browsers keep audio locked until one).
 
 // `ctx` is injectable so the sound can be rendered offline and measured (see scripts/check-ambience.cjs).
+// Overall mix level. Lowered from 0.9 after the first listen ("reduce the bg effects slightly").
+const LEVEL = 0.6;
+
 export function createAmbience(ctx = new AudioContext()) {
   const master = ctx.createGain();
   const comp = ctx.createDynamicsCompressor();
@@ -93,12 +96,12 @@ export function createAmbience(ctx = new AudioContext()) {
     async start() {
       if (ctx.state === 'suspended' && !(ctx instanceof OfflineAudioContext)) await ctx.resume();
       if (!running) { startBed(); running = true; }
-      level(0.9, 3);
+      level(LEVEL, 3);
     },
     stop() { level(0, 2.5); },
     setMuted(value) {
       muted = value;
-      level(value || !running ? 0 : 0.9, 0.4);
+      level(value || !running ? 0 : LEVEL, 0.4);
     },
     /** 0..1 voice level from the agent's audio: the bed sinks while the spirit speaks. */
     duck(voice) { bed.gain.setTargetAtTime(1 - Math.min(1, voice * 1.6) * 0.65, now(), 0.12); },
