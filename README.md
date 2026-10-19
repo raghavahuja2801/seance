@@ -14,8 +14,17 @@ npm run provision           # creates/publishes the agent; copy SEANCE_AGENT_ID 
 
 ## Status
 - [x] Agent + client tools provisioned (PR 1)
-- [ ] Ghost roster + session endpoint (PR 2)
+- [x] Ghost roster + session endpoint (PR 2)
 - [ ] Séance page (PR 3)
 - [ ] Atmosphere + write-up (PR 4)
 
 Cost: agent minutes are billed at about $0.06/min to the workspace that owns the key.
+
+## Run
+
+```bash
+npm start                   # http://127.0.0.1:8790
+npm run audition            # optional: render each ghost's first line with Drama 3 into runs/audition/
+```
+
+Ghosts are defined in `src/ghosts.ts`. Each has a public epitaph and a private secret, clues, a peace condition and an anger trigger. The server only ever sends the browser `{id, name, epitaph}` and a session token.

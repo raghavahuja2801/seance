@@ -14,3 +14,10 @@
 - **Result.** 3/3 replies were plain prose with **no tags of any kind**, e.g. "Cold steel in the dark... yes, I was taken before my time. My blood still stains the cold floor beneath your feet."
 - **Interpretation.** Inconclusive about the live path. The test runner may not include the expressive guide, since that guide is a TTS concern. Either way, expressive mode alone can't be relied on.
 - **Next.** Ghost prompts teach the syntax (ADR-3). PR 3's live call checks that tags reach TTS and how the transcript stream shows them.
+
+## R-3: Ghost voices + session overrides (2026-10-19)
+- **Voices:** chosen from the public library by tags, then auditioned with Drama 3 (`npm run audition`, writes `runs/audition/*.mp3`, about 7 s each). All three render with `model: drama-3`:
+  - Eleanor: "british woman narrat" `14a35dc1f1024e61a69cab445c0a8f7d`
+  - Lou: "singer" `9dc77337699140d0b19a5686c2400383`
+  - Silas: "Old man" `00731df901a74de5b9b000713f14718c`
+- **Session overrides:** `POST /v1/agent/sessions` with `overrides: {system_prompt, voice_id, first_message}` plus `metadata` succeeded. It returned `transport: livekit`, `max_duration_seconds: 600` (from our config) and a `wss://fish-agent-….livekit.cloud` URL. Ending it right away (`POST /sessions/{id}/end` → 204) leaves `status: failed, end_reason: cancelled`, and the metadata comes back intact.
