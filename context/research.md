@@ -60,3 +60,11 @@
 - Not checked: how it sounds to a human. Next play-test.
 - **After the first listen (user: "reduce the volume for the bg effects slightly"):** master level 0.9 → 0.6 (about −3.5 dB). Bed 0.022, violent creak 0.053, peak 0.30. All checks still pass.
 - **Removed the planchette "tap" on each letter** (user: "I don't like the tap sound… remove it completely"). Only the soft slide remains.
+
+## R-8: Three more ghosts (2026-10-19)
+- **Agnes Whitlock** (Salem 1692, falsely accused). Voice "Old Woman Audio" `7e4baf13677e4b95b5e25a60b9a717b4`. The accusers are invented names, not real Salem figures.
+- **Tommy Hale** (8-year-old, 1918, stuck in a dumbwaiter). Voice "Kid" `1ec4fec8af974d82a2ec69d86a81dc3d`.
+- **The Great Marvello** (magician, 1911, his assistant swapped the lock). Voice "Theatrical Showman" `58b3344db8b44d6ba27cc67dd908ccb2`.
+- Voice rule: generic library voices only. Celebrity and franchise clones (e.g. "Scarlet Witch", "Pomni") were skipped.
+- **Tool-use eval** (`eval-tools.ts 3 agnes,tommy,marvello`): **54/54**, all six cases on the first try. The PR 4 prompt structure carries over to new characters without tuning.
+- **Live:** Tommy's opening line ("Ready or not... you have to find me!") streamed on desktop and phone. Auditions are rendered via `npm run audition`; the voices haven't been judged by a human yet.
