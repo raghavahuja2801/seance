@@ -26,7 +26,7 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 ## Commands
 - `npm start` / `npm run dev`: serve on http://127.0.0.1:8790.
 - `npm run provision`: create or update the agent. Run it after any change to `src/agent.ts`.
-- `npm test`, `npm run typecheck`.
+- `npm test`, `npm run typecheck`, `npm run check:browser` (server running). CI runs all three (`.github/workflows/ci.yml`, jobs `unit` and `browser`). Live checks (`check-candles.cjs`, `eval-tools.ts`) are manual because they cost agent time.
 
 ## Conventions
 - Node ≥ 22.18 runs `.ts` directly (type stripping); no build step. Same setup as `experiments/ASR_demo`.
