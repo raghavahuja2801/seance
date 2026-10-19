@@ -22,7 +22,7 @@
     "typescript": "^5.9.0"
   },
   "dependencies": {
-    "@fastify/static": "^10.1.6",
+    "@fastify/static": "~9.3.0",
     "fastify": "^5.12.7"
   }
 }
