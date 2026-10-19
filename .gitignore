@@ -1,0 +1,6 @@
+# Secrets - never commit
+.env
+
+node_modules/
+*.log
+.DS_Store
