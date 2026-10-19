@@ -47,3 +47,14 @@
 **Reasoning.** Effects stay tied to what is actually being said, which is the point of the demo. A timer would feel random. Stronger wording doesn't help when no rule covers the situation.
 
 **Tradeoffs.** With five candles the room can go dark before the reveal. Watch for this in the next play-test; a relight on peace or more candles are easy follow-ups.
+
+## ADR-5: Brand assets come from Fish's own repos, unmodified except trimming and fill
+
+**Decision.**
+- **Fish Audio:** the official dark-background logo (`repos/docs/logo/dark.png`), with its transparent padding trimmed by script.
+- **LiveKit:** the wordmark Fish's own site already uses (`platform-web/public/images/enterprise/logo-livekit.svg`), with fill set to white for the dark page.
+- Shown as a "Fish Audio × LiveKit" lockup top-left, per the user's request to show the joint effort. LiveKit is the realtime transport under every agent session.
+
+**Why.** Don't hand-draw or guess brand marks. The first attempt cropped the PNG with CSS `clip-path` using a guessed offset, and cut the fish mark in half. Trimming the asset itself avoids magic offsets.
+
+**Open.** Confirm co-branding is fine with LiveKit before this demo goes anywhere public.
