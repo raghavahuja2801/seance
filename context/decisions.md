@@ -31,4 +31,19 @@
 
 **Decision.** Each ghost's system prompt explicitly teaches `[free-text direction]`, inline sounds and `<whisper>…</whisper>`. Keep `expressive: true` in case it helps.
 
-**Consequence.** We still have to confirm that the live voice path passes brackets through to TTS; this is checked in PR 3.
+**Consequence.** Confirmed in R-4 and R-5: the live voice path passes the directions to Drama 3, which performs them ("audio is perfect with the tags"), and strips them from the transcript and stored text.
+
+## ADR-4: Candles as a truth meter; tool use tuned by tests, not by feel
+
+**Problem.** In the first play-test (R-5), the ghosts never snuffed candles and only spelled YES/NO/GOODBYE.
+
+**Options considered**
+1. Stronger wording ("use your powers often").
+2. Fire effects from the page on a timer, without involving the model.
+3. Give each power a **story meaning** the model can apply to any turn. Candles are the ghost's hold on this world and go out as the living get closer to the truth; spelling marks every revealed clue.
+
+**Decision.** Option 3, measured with platform tool tests (R-6).
+
+**Reasoning.** Effects stay tied to what is actually being said, which is the point of the demo. A timer would feel random. Stronger wording doesn't help when no rule covers the situation.
+
+**Tradeoffs.** With five candles the room can go dark before the reveal. Watch for this in the next play-test; a relight on peace or more candles are easy follow-ups.

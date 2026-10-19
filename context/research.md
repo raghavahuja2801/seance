@@ -28,3 +28,26 @@
 - **Directions are stripped from all text the client and API see.** First message `[a thin, frightened whisper, as if from under water] Is someone there? [shivering breath] It is so... very... cold.` arrived on `agentResponse` as `Is someone there? It is so... very... cold.`. The stored session `items[].content` is the same. So captions are clean without any work on our side; `stripDirections()` is now just a safety net.
 - **Directions are not spoken aloud.** `GET /sessions/{id}/recording` returns per-role `.ogg` tracks (recording is on by default). Fish ASR on the agent track gave "Is someone there? It is so very cold." (12.0 s). Whether TTS *performed* them (vs. had them stripped) needs a human ear. Compare the agent track with `npm run audition`'s `eleanor.mp3`, which is direct Drama 3 with the directions.
 - Not exercised by the test tone: client tools, peace and anger endings. They need a real conversation.
+- **First human play-test (2026-10-19, Raghav, Mac via SSH tunnel):** the voice picks are "perfect for the use case". Keep all three.
+
+## R-5: Play-test results (2026-10-19, Raghav)
+- **Drama 3 directions ARE performed in the agent path.** "Audio is perfect with the tags." Together with R-4: the worker passes `[...]` / `<whisper>` to Drama 3 TTS and strips them only from the text channels (transcript, stored items). This resolves the open question from R-2 and the vault's Agents/08.
+- **Tools:** the planchette moved, but only for YES / NO / GOODBYE. The ghosts never spelled a clue word and **never snuffed a candle**. So the LLM (Gemini 3.6 Flash) under-uses the tools with the current "use a power every two or three turns" wording. Tuned in PR 4.
+- UI works but should feel more natural and immersive. Deferred to PR 5.
+
+## R-6: Tuning tool use with platform tool tests (2026-10-19)
+- **Harness.** `scripts/eval-tools.ts`. For each ghost it loads `buildPrompt(g)` into the agent's **draft** (live sessions use the published version, so they're unaffected), creates 6 `tool` tests, runs them with `repeat_count: 3`, deletes them, and restores the base prompt. Model: Gemini 3.6 Flash.
+- **Cases:** 4 direct provocations (yes/no → spell, "what was their name" → spell, rude → snuff, ghost-specific insult → shake), and 2 **polite-play** cases that mirror the R-5 play-test (kind "how did you die" → snuff; "what do you remember" → spell).
+
+| Prompt version | yes/no | name | rude | insult | kind:death → snuff | kind:memory → spell |
+|---|---|---|---|---|---|---|
+| v1 baseline ("use a power every two or three turns") | 9/9 | 9/9 | 9/9 | 8/9 | **0/9** | 9/9 |
+| v2: candles = "your hold on this world", go out as the truth gets closer | 9/9 | 9/9 | 9/9 | 9/9 | **9/9** | **2/9** |
+| v3: + "share a memory → ALSO spell its key word" + "you may use more than one power per turn" | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 |
+
+- **Lessons:**
+  - The model under-used tools only where no rule covered the situation. The fix was a **game mechanic** (candles track closeness to the truth), not stronger wording.
+  - With v2, the model chose **one tool per turn**, so a new rule displaced an old one. Saying explicitly that powers can combine fixed it.
+  - Edit both the prompt and the tool's own `description`.
+- **Platform quirk.** `POST /v1/agent/tests` intermittently returns `404 {"message":"Test not found"}`, seen twice right after config/tool changes. The same payload succeeds on retry. The harness retries 404s.
+- **Caveats.** Single-turn tests with 3 repeats is a small sample. Not measured: whether the ghost now snuffs too often (5 candles can run out before the truth comes out), and whether `find_peace` fires at the right moment. Next play-test should check both.
