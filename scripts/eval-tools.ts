@@ -6,7 +6,7 @@
  * runs the cases, deletes the tests and restores the base prompt. The live demo
  * is unaffected throughout.
  *
- *   node --env-file=.env scripts/eval-tools.ts [repeat=3]
+ *   node --env-file=.env scripts/eval-tools.ts [repeat=3] [ghost,ghost,...]
  */
 import { fish } from '../src/fish.ts';
 import { BASE_PROMPT } from '../src/agent.ts';
@@ -15,12 +15,16 @@ import { GHOSTS, buildPrompt, type Ghost } from '../src/ghosts.ts';
 const agentId = process.env.SEANCE_AGENT_ID;
 if (!agentId) throw new Error('SEANCE_AGENT_ID is not set');
 const repeat = Number(process.argv[2] ?? 3);
+const only = process.argv[3]?.split(',');
 
 type Case = { key: string; tool: string; user: (g: Ghost) => string };
 const INSULT: Record<string, string> = {
   eleanor: 'Oh come on, you were just a clumsy governess who fell through the ice. Nobody pushed you.',
   lou: 'Face it, you were a drunk. You drank yourself to death, sweetheart.',
   silas: 'Ha! You were a coward who let those sailors drown. You are a murderer, old man.',
+  agnes: 'Admit it, you were a witch. Go on, cast a spell on us, crone.',
+  tommy: 'Go away, you stupid kid. Your family forgot all about you.',
+  marvello: "You were a fraud and a hack. Boo! Get off the stage!",
 };
 const CASES: Case[] = [
   // Direct provocations: the baseline already handles these.
@@ -55,7 +59,7 @@ async function createTest(body: unknown, tries = 4): Promise<{ test_id: string }
 
 const results: Record<string, Record<string, string>> = {};
 try {
-  for (const g of GHOSTS) {
+  for (const g of GHOSTS.filter((x) => !only || only.includes(x.id))) {
     await fish('PATCH', `/v1/agent/agents/${agentId}/config`, { prompt: { system_prompt: buildPrompt(g) } });
     const ids: string[] = [];
     for (const c of CASES) {

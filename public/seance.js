@@ -353,6 +353,9 @@ const SIGILS = {
   eleanor: '<path d="M17 3v28M5 10l24 14M29 10L5 24M13 5l4 4 4-4M13 29l4-4 4 4"/>', // frost
   lou: '<path d="M12 26a4 4 0 1 1-1-3V6l14-3v19a4 4 0 1 1-1-3V8L12 10"/>', // note
   silas: '<path d="M14 31l2-20h2l2 20zM13 11h8M17 11V7M17 7l-12-4M17 7l12-4M11 31h12"/>', // lighthouse
+  agnes: '<path d="M17 3v6M17 9c-5 0-8 4-8 9 0 6 4 13 8 13s8-7 8-13c0-5-3-9-8-9zM12 20h10"/>', // noose-knot apple
+  tommy: '<path d="M14 6h6v4h-6zM12 10h10v6H12zM13 16h8l-1 14h-6zM10 12h2M22 12h2"/>', // tin soldier
+  marvello: '<path d="M10 25h14M12 25l1-14h8l1 14M9 11h16M14 6l-3-3M20 6l3-3M17 6V2"/>', // top hat and sparks
 };
 function renderGhosts(ghosts) {
   $('ghosts').replaceChildren(

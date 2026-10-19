@@ -19,7 +19,7 @@ npm run provision           # creates/publishes the agent; copy SEANCE_AGENT_ID 
 - [x] Ghost tool tuning + write-up (PR 4)
 - [x] Immersive UI: loading screen, co-branding, mobile (PR 5)
 - [x] Ambient sound (PR 6)
-- [ ] More stories (PR 7)
+- [x] More stories (PR 7): six ghosts
 
 Cost: agent minutes are billed at about $0.06/min to the workspace that owns the key.
 
