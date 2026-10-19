@@ -92,3 +92,20 @@
 **Not verified:** an actual Vercel build. That needs the user's Vercel account.
 
 **Open risk.** A public URL plus no rate limit means anyone can run séances on our key. Keep Deployment Protection on until a limiter exists.
+
+## ADR-8: In-memory rate limit on session creation, as a first line
+
+**Problem.** On a public URL, anyone can call `POST /api/session` in a loop, and each session bills the Fish key (~$0.06/min, up to 10 min).
+
+**Options considered**
+1. **In-memory sliding window in the server.** No new dependencies or accounts. Per instance only.
+2. **Shared store** (Upstash/Redis via the Vercel Marketplace). A real global cap, but a new dependency, account and secret.
+3. **Vercel Firewall rate-limit rule.** Edge-level and global, configured in the dashboard, not in code.
+4. **Origin check.** Skipped: browsers on other sites already fail the CORS preflight for our JSON POST, and curl can forge Origin.
+
+**Decision.** Option 1 now: 4 per IP per 15 min, 40 per instance per hour. It runs before validation, so refused requests cost nothing, and it returns 429 with `Retry-After`. On Vercel, `trustProxy` reads the client IP from `X-Forwarded-For`. Option 3 is recommended in the README for a hard cap.
+
+**Verified:**
+- 3 unit tests (limit, sliding window, refusals don't extend the wait).
+- HTTP: local, the 5th request gets 429 with `Retry-After: 900`. Vercel mode: per-`X-Forwarded-For` quotas are independent.
+- The page shows "The spirits are weary" on 429.

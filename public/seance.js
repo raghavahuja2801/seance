@@ -258,7 +258,7 @@ async function summon(g, button) {
       body: JSON.stringify({ ghost: g.id }),
     });
     const body = await res.json();
-    if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+    if (!res.ok) throw Object.assign(new Error(body.error ?? `HTTP ${res.status}`), { status: res.status });
 
     document.body.className = '';
     $('ghost-name').textContent = g.name;
@@ -302,8 +302,10 @@ async function summon(g, button) {
     log('summon failed', err?.code ?? '', err?.message ?? String(err));
     const micDenied = err?.code === 'mic_permission_denied';
     endingScreen(
-      'The spirits are silent',
-      micDenied ? 'They need to hear your voice. Allow the microphone and try again.' : 'Nothing answered from beyond. Try again in a moment.',
+      err?.status === 429 ? 'The spirits are weary' : 'The spirits are silent',
+      err?.status === 429
+        ? 'Too many séances have been held tonight. Rest a while, then try again in a few minutes.'
+        : micDenied ? 'They need to hear your voice. Allow the microphone and try again.' : 'Nothing answered from beyond. Try again in a moment.',
       0,
     );
   } finally {
