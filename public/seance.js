@@ -274,6 +274,7 @@ async function summon(g, button) {
     session = await AgentSession.start({ sessionToken: body, clientTools });
     await lighting;
     log('connected', session.sessionId, g.id);
+    if (DEBUG) window.__session = session; // lets tests type to the spirit (see scripts/check-candles.cjs)
 
     session.on('modeChange', (mode) => {
       document.body.dataset.mode = mode;

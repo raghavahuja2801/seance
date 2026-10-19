@@ -2,8 +2,8 @@
 // Create it from a user gesture (browsers keep audio locked until one).
 
 // `ctx` is injectable so the sound can be rendered offline and measured (see scripts/check-ambience.cjs).
-// Overall mix level. Lowered from 0.9 after the first listen ("reduce the bg effects slightly").
-const LEVEL = 0.6;
+// Overall mix level. 0.9 → 0.6 → 0.42 over two listens ("reduce the bg effects slightly", then "slightly more").
+const LEVEL = 0.42;
 
 export function createAmbience(ctx = new AudioContext()) {
   const master = ctx.createGain();
