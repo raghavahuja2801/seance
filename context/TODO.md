@@ -8,3 +8,4 @@
 - [x] **PR 6: Ambient sound.** Web Audio drone, wind, creak on shake, hiss on snuff, planchette clicks; ducked under the ghost voice; mute toggle.
 - [x] **PR 7: More stories.** Three new ghosts (Salem accused witch, a lost child, a stage magician), auditioned voices, eval-tools pass, sigils.
 - [x] **PR 8: Play-test fixes.** Candles now visibly go out (CSS animation overrode opacity, R-9); mix lowered again; `check-candles.cjs` end-to-end check.
+- [x] **PR 9: Story variety.** Silas burns in the lantern room, Marvello dies in the Bullet Catch; six distinct deaths.
