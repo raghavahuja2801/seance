@@ -1,4 +1,5 @@
 import { boardLayout, intensityOf, spellSteps, stripDirections } from './lib.js';
+import { createAmbience } from './ambience.js';
 
 const SDK_URL = 'https://cdn.jsdelivr.net/npm/@fishaudio/agent-client@0.3.0/+esm';
 const $ = (id) => document.getElementById(id);
@@ -12,6 +13,18 @@ let AgentSession = null; // loaded by the loader
 let session = null;
 let ghost = null;
 let foundPeace = false;
+let ambience = null; // created on the first summon click: browsers unlock audio only inside a user gesture
+
+const MUTE_KEY = 'seance.muted';
+function savedMuted() {
+  try { return localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
+}
+function setMuted(muted) {
+  try { localStorage.setItem(MUTE_KEY, muted ? '1' : '0'); } catch { /* private mode: not remembered */ }
+  ambience?.setMuted(muted);
+  $('mute').setAttribute('aria-pressed', String(muted));
+  $('mute').setAttribute('aria-label', muted ? 'Unmute sound' : 'Mute sound');
+}
 
 function log(...args) {
   console.log('[seance]', ...args);
@@ -68,7 +81,9 @@ function spell(raw) {
         continue;
       }
       movePlanchette(spots[step]);
+      ambience?.slide(0.9);
       await sleep(950);
+      ambience?.tick();
       glyphs[step].classList.add('lit');
       $('spelled').textContent += step;
       await sleep(450);
@@ -99,6 +114,7 @@ function placeCandles() {
 async function lightCandles() {
   for (const c of document.querySelectorAll('.candle.unlit')) {
     c.classList.remove('unlit');
+    ambience?.light();
     updateLight();
     await sleep(REDUCED_MOTION ? 0 : 280);
   }
@@ -113,6 +129,7 @@ function snuffCandle() {
   const lit = [...document.querySelectorAll('.candle:not(.out):not(.unlit)')];
   if (!lit.length) return { snuffed: false };
   lit[Math.floor(Math.random() * lit.length)].classList.add('out');
+  ambience?.snuff();
   return { snuffed: true, remaining: updateLight() };
 }
 function snuffAll() {
@@ -121,6 +138,7 @@ function snuffAll() {
 }
 function relightAll() {
   document.querySelectorAll('.candle').forEach((c) => c.classList.remove('out', 'unlit'));
+  ambience?.light();
   updateLight();
 }
 
@@ -129,6 +147,7 @@ function shakeRoom(intensity) {
   document.body.classList.remove('shake-gentle', 'shake-violent');
   void document.body.offsetWidth; // restart the animation
   document.body.classList.add(cls);
+  ambience?.creak(intensityOf(intensity));
   setTimeout(() => document.body.classList.remove(cls), 2000);
 }
 
@@ -175,9 +194,11 @@ addEventListener('resize', sizeDust);
 let flicker = 0;
 function frame() {
   const root = document.documentElement.style;
-  // Smoothed random walk: candlelight that breathes rather than strobes.
-  flicker += (Math.random() * 2 - 1 - flicker) * 0.08;
-  root.setProperty('--flicker', flicker.toFixed(3));
+  if (!REDUCED_MOTION) {
+    // Smoothed random walk: candlelight that breathes rather than strobes.
+    flicker += (Math.random() * 2 - 1 - flicker) * 0.08;
+    root.setProperty('--flicker', flicker.toFixed(3));
+  }
 
   let level = 0;
   const data = session?.getOutputFrequencyData?.();
@@ -187,6 +208,8 @@ function frame() {
     level = Math.min(1, sum / data.length / 90);
   }
   root.setProperty('--voice', level.toFixed(3));
+  ambience?.duck(level);
+  if (REDUCED_MOTION) return requestAnimationFrame(frame);
 
   dctx.clearRect(0, 0, innerWidth, innerHeight);
   for (const m of motes) {
@@ -200,7 +223,7 @@ function frame() {
   }
   requestAnimationFrame(frame);
 }
-if (!REDUCED_MOTION) requestAnimationFrame(frame);
+requestAnimationFrame(frame);
 
 // ---------- Session ----------
 const clientTools = {
@@ -221,6 +244,14 @@ async function summon(g, button) {
   ghost = g;
   foundPeace = false;
   button.setAttribute('aria-busy', 'true');
+  try {
+    ambience ??= createAmbience();
+    ambience.setMuted(savedMuted());
+    ambience.start();
+    if (DEBUG) window.__ambience = ambience;
+  } catch (err) {
+    log('no audio:', err?.message ?? String(err)); // the séance still works silently
+  }
   try {
     const res = await fetch('/api/session', {
       method: 'POST',
@@ -285,10 +316,12 @@ function finish(reason) {
   session = null;
   const name = ghost?.name ?? 'The spirit';
   if (foundPeace) {
+    ambience?.peace();
     document.body.classList.add('peace');
     endingScreen(`${name} is at peace`, 'The cold lifts. Every candle burns warm again. Thank you for listening.');
   } else if (reason === 'agent_hangup') {
     snuffAll();
+    ambience?.wrath();
     document.body.classList.add('wrath');
     endingScreen(`${name} has left in anger`, 'Every flame dies at once. The circle is broken, and the truth stays buried.');
   } else if (reason === 'user_hangup') {
@@ -301,6 +334,7 @@ function finish(reason) {
 function endingScreen(title, text, delay = 1800) {
   // Let the last effect play before the room fades out.
   setTimeout(() => {
+    ambience?.stop();
     $('ending-title').textContent = title;
     $('ending-text').textContent = text;
     show('ending');
@@ -308,6 +342,8 @@ function endingScreen(title, text, delay = 1800) {
 }
 
 $('end').addEventListener('click', () => session?.end());
+$('mute').addEventListener('click', () => setMuted($('mute').getAttribute('aria-pressed') !== 'true'));
+setMuted(savedMuted());
 $('again').addEventListener('click', () => {
   document.body.className = '';
   show('summon');

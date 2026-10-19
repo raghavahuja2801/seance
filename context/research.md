@@ -51,3 +51,10 @@
   - Edit both the prompt and the tool's own `description`.
 - **Platform quirk.** `POST /v1/agent/tests` intermittently returns `404 {"message":"Test not found"}`, seen twice right after config/tool changes. The same payload succeeds on retry. The harness retries 404s.
 - **Caveats.** Single-turn tests with 3 repeats is a small sample. Not measured: whether the ghost now snuffs too often (5 candles can run out before the truth comes out), and whether `find_peace` fires at the right moment. Next play-test should check both.
+
+## R-7: Ambience levels, measured offline (2026-10-19)
+- `scripts/check-ambience.cjs` renders `createAmbience(new OfflineAudioContext(...))` in headless Chrome and asserts on RMS levels.
+- **It caught a real problem.** The first mix had the bed at RMS 0.14, loud enough to compete with the ghost's voice. A violent creak was only 1.2× the bed, because the compressor's defaults (-24 dB, 12:1) squashed every effect into the bed.
+- **Fixes:** drone and wind about 3× quieter; compressor at -10 dB, 4:1; creak band-pass Q 6 → 3.
+- **Final:** bed 0.033, violent creak 0.080 (+7.7 dB over the bed), ducked bed 0.012 (-8.8 dB), muted 0, peak 0.45 (no clipping).
+- Not checked: how it sounds to a human. Next play-test.

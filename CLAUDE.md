@@ -14,6 +14,7 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 - `scripts/provision.ts`: idempotent create/update/publish of the agent and tools.
 - `src/ghosts.ts`: the ghost roster and prompt builder (secrets stay server-side).
 - `src/server.ts`: Fastify. `GET /api/ghosts` (public info) and `POST /api/session {ghost}` (returns the SDK session token). Binds to 127.0.0.1 only.
+- `public/ambience.js`: synthesized room sound (Web Audio, no files): drone and wind bed ducked under the voice, plus effects for candles, planchette, shakes and endings. `scripts/check-ambience.cjs` renders it offline and asserts levels.
 - `public/brand/`: logos. `fish-audio-logo.png` is the official docs `logo/dark.png`, trimmed of transparent padding; `livekit-logo.svg` is LiveKit's wordmark from platform-web `images/enterprise/logo-livekit.svg`, filled white.
 - `public/`: the page. `index.html`, `seance.css`, `seance.js` (SDK from jsDelivr, tool handlers, endings) and `lib.js` (pure helpers, tested in Node).
 - `scripts/audition.ts`: render each ghost's first line with Drama 3.
