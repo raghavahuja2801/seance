@@ -68,3 +68,12 @@
 - Voice rule: generic library voices only. Celebrity and franchise clones (e.g. "Scarlet Witch", "Pomni") were skipped.
 - **Tool-use eval** (`eval-tools.ts 3 agnes,tommy,marvello`): **54/54**, all six cases on the first try. The PR 4 prompt structure carries over to new characters without tuning.
 - **Live:** Tommy's opening line ("Ready or not... you have to find me!") streamed on desktop and phone. Auditions are rendered via `npm run audition`; the voices haven't been judged by a human yet.
+
+## R-9: "I haven't seen the candles blow out yet" (2026-10-19)
+- **Session logs showed the ghosts were snuffing all along.** Of the user's 7 real sessions, 5 called `seance_snuff_candle`; one Lou session did it 5 times. Every call came back `{"status":"delivered"}`. So it was a page bug, not prompting.
+- **Root cause:** the flame's `flicker` keyframes animated `opacity`, and a running CSS animation overrides a normal declaration. `.candle.out .flame { opacity: 0 }` lost, and the flame stayed at 0.997 opacity, with only the smoke wisp appearing. Present since PR 3. Earlier headless checks asserted the `.out` class, never what was visible.
+- **Fix:** flicker via `filter: brightness()` instead of opacity. Measured: snuffed flame opacity 0.997 → 0. This also fixes the loader candle, which showed its flame before "lighting".
+- **New end-to-end check, `scripts/check-candles.cjs`:** live Lou session, a typed rude line (`window.__session`, exposed under `?debug` only), then assert a candle's computed flame opacity is below 0.05. Result: the ghost called snuff + shake, and `lit lit lit dark lit`.
+- **Lesson:** for a visual effect, assert computed style, not class names.
+- **Volume:** mix 0.6 → 0.42 after the second listen. Bed 0.015, violent creak 0.037 (+7.6 dB), all level checks pass.
+- **Sessions are a debugging tool:** `GET /v1/agent/sessions?agent_id=` plus `GET /sessions/{id}` items (`tool_call` / `tool_result`) answer "did the agent do X" directly.

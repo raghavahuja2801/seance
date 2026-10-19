@@ -18,6 +18,7 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 - `public/brand/`: logos. `fish-audio-logo.png` is the official docs `logo/dark.png`, trimmed of transparent padding; `livekit-logo.svg` is LiveKit's wordmark from platform-web `images/enterprise/logo-livekit.svg`, filled white.
 - `public/`: the page. `index.html`, `seance.css`, `seance.js` (SDK from jsDelivr, tool handlers, endings) and `lib.js` (pure helpers, tested in Node).
 - `scripts/audition.ts`: render each ghost's first line with Drama 3.
+- `scripts/check-candles.cjs`: live end-to-end check that a ghost's snuff really darkens a candle (computed style). `scripts/check-ambience.cjs`: offline sound levels.
 - `scripts/eval-tools.ts`: tool-use eval harness (platform tool tests on the draft; see research R-6).
 - `scripts/spike-*.ts`: one-off experiments; results go in `context/research.md`.
 - `test/`: `node --test` unit tests.
