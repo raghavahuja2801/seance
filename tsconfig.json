@@ -17,6 +17,9 @@
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
     "allowImportingTsExtensions": true,
+    /* Node runs the .ts sources directly, but hosts that compile them first
+       (Vercel) need "./fish.ts" emitted as "./fish.js" or the import 404s at runtime. */
+    "rewriteRelativeImportExtensions": true,
     "noEmit": true,
     "skipLibCheck": true
   },
