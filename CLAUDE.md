@@ -12,10 +12,14 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 - `src/fish.ts`: tiny Agents API client (server-side only; carries the API key).
 - `src/agent.ts`: declarative agent and client-tool definitions.
 - `scripts/provision.ts`: idempotent create/update/publish of the agent and tools.
+- `src/ghosts.ts`: the ghost roster and prompt builder (secrets stay server-side).
+- `src/server.ts`: Fastify. `GET /api/ghosts` (public info) and `POST /api/session {ghost}` (returns the SDK session token). Binds to 127.0.0.1 only.
+- `scripts/audition.ts`: render each ghost's first line with Drama 3.
 - `scripts/spike-*.ts`: one-off experiments; results go in `context/research.md`.
 - `test/`: `node --test` unit tests.
 
 ## Commands
+- `npm start` / `npm run dev`: serve on http://127.0.0.1:8790.
 - `npm run provision`: create or update the agent. Run it after any change to `src/agent.ts`.
 - `npm test`, `npm run typecheck`.
 
