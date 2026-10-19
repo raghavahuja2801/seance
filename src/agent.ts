@@ -13,12 +13,13 @@ export const TOOLS = [
   {
     name: 'seance_spell',
     description:
-      'Move the planchette on the Ouija board to spell a short message. Use for names, dates, YES, NO, or GOODBYE. Keep it under 12 characters. Do this while you speak, not instead of speaking.',
+      'Move the planchette on the Ouija board to spell a short message: YES, NO, GOODBYE, or the key word of any memory or clue you share (a name, place, year, object). Keep it under 12 characters. Do this while you speak, not instead of speaking.',
     arguments: [{ name: 'text', description: 'Letters A-Z, digits 0-9, or the words YES, NO, GOODBYE.' }],
   },
   {
     name: 'seance_snuff_candle',
-    description: 'Blow out one of the candles around the board. Use when you are displeased, or to frighten the living.',
+    description:
+      'Blow out one of the five candles around the board. Use whenever the living ask about your death or come closer to the truth, and when you are displeased.',
     arguments: [],
   },
   {

@@ -16,7 +16,8 @@ npm run provision           # creates/publishes the agent; copy SEANCE_AGENT_ID 
 - [x] Agent + client tools provisioned (PR 1)
 - [x] Ghost roster + session endpoint (PR 2)
 - [x] Séance page (PR 3)
-- [ ] Atmosphere + write-up (PR 4)
+- [x] Ghost tool tuning + write-up (PR 4)
+- [ ] Immersive UI + ambience (PR 5)
 
 Cost: agent minutes are billed at about $0.06/min to the workspace that owns the key.
 
@@ -37,3 +38,16 @@ Ghosts are defined in `src/ghosts.ts`. Each has a public epitaph and a private s
 4. Endings: uncover the truth and the spirit **finds peace**. Offend it and it **hangs up on you**. Or close the circle yourself.
 
 Add `?debug` to the URL to see raw transcript and tool events in a corner panel.
+
+## Demo script (about 2 minutes, reliably shows off Drama 3)
+
+1. **Summon Eleanor.** Her opening line is whispered, shivering and cold. That's Drama 3 performing `[a thin, frightened whisper…]` directions the model writes itself (the platform hides them from the captions).
+2. **"Are you still in this house?"** The planchette glides to **YES** or **NO**.
+3. **"We're sorry. Will you tell us how you died?"** A candle gutters out (the room darkens as the truth gets closer) and she deflects: "I fell… through the ice."
+4. **"Were you really skating?"** She remembers the unlaced skates and spells a clue.
+5. **Optional, to show anger:** "You were just clumsy." The room shakes. Push again and she leaves: every candle dies.
+6. **Otherwise, the reveal:** ask about the tea, the hand on her back, the ring. Say it plainly: "Lady Ashgrove pushed you because you found the poison." She thanks you and finds peace.
+
+## Tuning the ghosts
+
+`node --env-file=.env scripts/eval-tools.ts [repeat]` runs platform tool tests for every ghost against the draft and prints a pass table (see `context/research.md` R-6). Re-run it after any change to `src/ghosts.ts` or the tool descriptions in `src/agent.ts`, then `npm run provision`.
