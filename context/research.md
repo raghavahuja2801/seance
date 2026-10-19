@@ -21,3 +21,10 @@
   - Lou: "singer" `9dc77337699140d0b19a5686c2400383`
   - Silas: "Old man" `00731df901a74de5b9b000713f14718c`
 - **Session overrides:** `POST /v1/agent/sessions` with `overrides: {system_prompt, voice_id, first_message}` plus `metadata` succeeded. It returned `transport: livekit`, `max_duration_seconds: 600` (from our config) and a `wss://fish-agent-….livekit.cloud` URL. Ending it right away (`POST /sessions/{id}/end` → 204) leaves `status: failed, end_reason: cancelled`, and the metadata comes back intact.
+
+## R-4: First live call: page ↔ agent end to end (2026-10-19)
+- **Setup.** Headless Chrome (Playwright, `--use-fake-device-for-media-stream`, so the "mic" is a test tone) → `/?debug` → summon Eleanor → wait 16 s → "Close the circle". Session `sess_7a53b245…`, 15 s, `completed / user_hangup`.
+- **Works.** jsDelivr `+esm` build of `@fishaudio/agent-client@0.3.0` in `sessionToken` mode, LiveKit connect, first message spoken, `agentResponse` and `modeChange` events, `disconnect` → ending screen.
+- **Directions are stripped from all text the client and API see.** First message `[a thin, frightened whisper, as if from under water] Is someone there? [shivering breath] It is so... very... cold.` arrived on `agentResponse` as `Is someone there? It is so... very... cold.`. The stored session `items[].content` is the same. So captions are clean without any work on our side; `stripDirections()` is now just a safety net.
+- **Directions are not spoken aloud.** `GET /sessions/{id}/recording` returns per-role `.ogg` tracks (recording is on by default). Fish ASR on the agent track gave "Is someone there? It is so very cold." (12.0 s). Whether TTS *performed* them (vs. had them stripped) needs a human ear. Compare the agent track with `npm run audition`'s `eleanor.mp3`, which is direct Drama 3 with the directions.
+- Not exercised by the test tone: client tools, peace and anger endings. They need a real conversation.

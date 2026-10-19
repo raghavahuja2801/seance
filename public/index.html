@@ -1,4 +1,58 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Séance</title>
-<p>The séance room is being prepared (PR 3).</p>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Séance</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="seance.css">
+</head>
+<body>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- 1. Choose a spirit -->
+  <section id="summon" class="screen active">
+    <h1>Séance</h1>
+    <p class="lede">Light the candles. Lay your fingers on the planchette. Choose whom to call&nbsp;back.</p>
+    <ul id="ghosts" class="ghosts" aria-label="Spirits"></ul>
+    <p class="fine">You will need a microphone. Speak to the spirit; it will answer. Learn how it truly died, and it may find&nbsp;peace.</p>
+  </section>
+
+  <!-- 2. The séance -->
+  <section id="room" class="screen" aria-live="polite">
+    <header class="room-head">
+      <h2 id="ghost-name"></h2>
+      <p id="status" class="status">Reaching across the veil…</p>
+    </header>
+
+    <div class="table">
+      <div class="candles" id="candles" aria-hidden="true"></div>
+      <div class="board" id="board" role="img" aria-label="Ouija board">
+        <div class="sun" aria-hidden="true">☀</div>
+        <div class="moon" aria-hidden="true">☾</div>
+        <div class="planchette" id="planchette" aria-hidden="true"><span class="lens"></span></div>
+      </div>
+    </div>
+
+    <div class="captions">
+      <p id="you" class="you"></p>
+      <p id="spirit" class="spirit"></p>
+      <p id="spelled" class="spelled" aria-label="Spelled on the board"></p>
+    </div>
+
+    <button id="end" class="end">Close the circle</button>
+  </section>
+
+  <!-- 3. Ending -->
+  <section id="ending" class="screen">
+    <h2 id="ending-title"></h2>
+    <p id="ending-text" class="lede"></p>
+    <button id="again">Summon another</button>
+  </section>
+
+  <pre id="debug" class="debug" hidden></pre>
+  <script type="module" src="seance.js"></script>
+</body>
+</html>
