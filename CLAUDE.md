@@ -14,6 +14,7 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 - `scripts/provision.ts`: idempotent create/update/publish of the agent and tools.
 - `src/ghosts.ts`: the ghost roster and prompt builder (secrets stay server-side).
 - `src/server.ts`: Fastify. `GET /api/ghosts` (public info) and `POST /api/session {ghost}` (returns the SDK session token). Binds to 127.0.0.1 only.
+- `public/`: the page. `index.html`, `seance.css`, `seance.js` (SDK from jsDelivr, tool handlers, endings) and `lib.js` (pure helpers, tested in Node).
 - `scripts/audition.ts`: render each ghost's first line with Drama 3.
 - `scripts/spike-*.ts`: one-off experiments; results go in `context/research.md`.
 - `test/`: `node --test` unit tests.
