@@ -1,10 +1,10 @@
 // Render the ambience offline in headless Chrome and assert on its levels.
 // Requires the server running (npm start) and Playwright + Chrome; run:
-//   node scripts/check-ambience.cjs [path/to/playwright]
-const { chromium } = require(process.argv[2] ?? 'playwright');
+//   npm run check:browser   (PW_CHANNEL=chrome to use installed Chrome instead of Playwright's Chromium)
+const { chromium } = require('playwright');
 
 (async () => {
-  const browser = await chromium.launch({ channel: 'chrome' });
+  const browser = await chromium.launch({ channel: process.env.PW_CHANNEL });
   const page = await browser.newPage();
   await page.goto('http://127.0.0.1:8790/');
   const r = await page.evaluate(async () => {

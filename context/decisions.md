@@ -58,3 +58,18 @@
 **Why.** Don't hand-draw or guess brand marks. The first attempt cropped the PNG with CSS `clip-path` using a guessed offset, and cut the fish mark in half. Trimming the asset itself avoids magic offsets.
 
 **Open.** Confirm co-branding is fine with LiveKit before this demo goes anywhere public.
+
+## ADR-6: CI runs only free, deterministic checks
+
+**Decision.**
+- **In CI:** two GitHub Actions jobs on every PR and on pushes to main.
+  - `unit`: typecheck + `node --test`.
+  - `browser`: Playwright Chromium against the real server; the candle regression check plus the offline ambience levels.
+- **Kept out:** the live checks (`check-candles.cjs`, `eval-tools.ts`).
+
+**Why.**
+- The live checks cost agent minutes, need the Fish API key as a repo secret, and are non-deterministic (the LLM can miss 1/36).
+- The browser checks need no key: the server boots with a dummy `SEANCE_AGENT_ID`, and no session is created.
+- `check-flame.cjs` was mutation-tested: injecting the old opacity-flicker keyframes makes it fail.
+
+**Consequence.** Prompt or behaviour regressions in the ghosts aren't caught by CI. Run `eval-tools.ts` by hand after changing `src/ghosts.ts`. A manual `workflow_dispatch` job with an API-key secret would be the next step if that becomes a pain.

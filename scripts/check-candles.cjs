@@ -1,10 +1,10 @@
 // End to end: a live ghost snuffs a candle and the flame is visibly gone.
 // Costs ~30 s of agent time. Requires the server (npm start), Playwright and Chrome:
-//   node scripts/check-candles.cjs [path/to/playwright]
-const { chromium } = require(process.argv[2] ?? 'playwright');
+//   node scripts/check-candles.cjs   (PW_CHANNEL=chrome to use installed Chrome)
+const { chromium } = require('playwright');
 
 (async () => {
-  const browser = await chromium.launch({ channel: 'chrome', args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--autoplay-policy=no-user-gesture-required'] });
+  const browser = await chromium.launch({ channel: process.env.PW_CHANNEL, args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--autoplay-policy=no-user-gesture-required'] });
   const page = await browser.newPage();
   page.on('console', (m) => m.text().startsWith('[seance] tool') && console.log(m.text()));
   await page.goto('http://127.0.0.1:8790/?debug');

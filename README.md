@@ -67,3 +67,15 @@ The speaker button top-right mutes it (remembered per browser). To check levels 
 npm start   # in another terminal
 node scripts/check-ambience.cjs <path-to-playwright>   # e.g. ../../repos/platform-web/node_modules/playwright
 ```
+
+## Testing
+
+| Check | Command | Needs | In CI |
+|---|---|---|---|
+| Typecheck | `npm run typecheck` | nothing | ✅ `unit` |
+| Unit tests (roster, no secret leaks, spelling sanitizer, board layout) | `npm test` | nothing | ✅ `unit` |
+| Browser: candles visibly go out; ambience levels | `npm run check:browser` (server running; `PW_CHANNEL=chrome` to use local Chrome) | Playwright | ✅ `browser` |
+| Live: a ghost snuffs a candle end to end | `node scripts/check-candles.cjs` | server + API key, ~30 s of agent time | ❌ manual |
+| Ghost tool-use eval | `node --env-file=.env scripts/eval-tools.ts [repeat] [ghosts]` | API key, ~5–10 min | ❌ manual |
+
+CI (`.github/workflows/ci.yml`) runs `unit` and `browser` on every pull request and on pushes to `main`. Neither uses secrets. The browser job boots the server with a dummy agent id because no session is ever created.

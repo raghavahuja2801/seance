@@ -13,10 +13,12 @@
     "provision": "node --env-file=.env scripts/provision.ts",
     "test": "node --test \"test/*.test.ts\"",
     "typecheck": "tsc --noEmit",
-    "audition": "node --env-file=.env scripts/audition.ts"
+    "audition": "node --env-file=.env scripts/audition.ts",
+    "check:browser": "node scripts/check-flame.cjs && node scripts/check-ambience.cjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "playwright": "1.61.1",
     "typescript": "^5.9.0"
   },
   "dependencies": {
