@@ -30,7 +30,8 @@ app.get('/api/ghosts', async () => publicGhosts());
 
 app.post<{ Body: { ghost?: unknown } }>('/api/session', async (req, reply) => {
   // Checked first, so refused requests never reach the Fish API or cost anything.
-  const limited = [perVisitor.take(req.ip), overall.take('all')].find((r) => !r.ok);
+  // Only when deployed: locally the server is bound to localhost and the only visitor is you.
+  const limited = process.env.VERCEL ? [perVisitor.take(req.ip), overall.take('all')].find((r) => !r.ok) : undefined;
   if (limited && !limited.ok) {
     req.log.warn({ ip: req.ip }, 'session rate limited');
     return reply

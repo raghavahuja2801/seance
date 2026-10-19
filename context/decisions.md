@@ -103,7 +103,7 @@
 3. **Vercel Firewall rate-limit rule.** Edge-level and global, configured in the dashboard, not in code.
 4. **Origin check.** Skipped: browsers on other sites already fail the CORS preflight for our JSON POST, and curl can forge Origin.
 
-**Decision.** Option 1 now: 4 per IP per 15 min, 40 per instance per hour. It runs before validation, so refused requests cost nothing, and it returns 429 with `Retry-After`. On Vercel, `trustProxy` reads the client IP from `X-Forwarded-For`. Option 3 is recommended in the README for a hard cap.
+**Decision.** Option 1 now: 4 per IP per 15 min, 40 per instance per hour, applied only when deployed (`VERCEL` set). Locally the server is bound to localhost, and limiting would just block the developer. It runs before validation, so refused requests cost nothing, and it returns 429 with `Retry-After`. On Vercel, `trustProxy` reads the client IP from `X-Forwarded-For`. Option 3 is recommended in the README for a hard cap.
 
 **Verified:**
 - 3 unit tests (limit, sliding window, refusals don't extend the wait).
