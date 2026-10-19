@@ -77,3 +77,12 @@
 - **Lesson:** for a visual effect, assert computed style, not class names.
 - **Volume:** mix 0.6 → 0.42 after the second listen. Bed 0.015, violent creak 0.037 (+7.6 dB), all level checks pass.
 - **Sessions are a debugging tool:** `GET /v1/agent/sessions?agent_id=` plus `GET /sessions/{id}` items (`tool_call` / `tool_result`) answer "did the agent do X" directly.
+
+## R-10: Story variety: not everyone drowns (2026-10-19)
+- **User feedback:** "did every character drown? be more creative". Three of six had water deaths (Eleanor under the ice, Silas looting the wreck, Marvello in the water tank).
+- **Rewrites:**
+  - **Silas** now burns in the lantern room. Panicking as the *Mary Ellen* broke up, he tried to relight the lamp, spilled the oil, and the light came back on too late. Epitaph: "Died a hero, tending the light". Same guilt twist, now with a vivid image.
+  - **Marvello** is now shot onstage in the Bullet Catch. Rosa loaded a real bullet in place of the marked one.
+- **Six distinct deaths now:** ice, poison, fire, gallows, a trap, a gunshot.
+- **Tool eval** (`silas,marvello`): 35/36. The single miss was Silas rude → snuff 2/3, on a case that was 9/9 before; treated as run-to-run noise.
+- **Guideline for future ghosts:** vary cause of death, and vary twist type (murdered by someone vs. guilty themselves vs. tragic accident).

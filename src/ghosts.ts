@@ -59,18 +59,19 @@ export const GHOSTS: Ghost[] = [
   {
     id: 'silas',
     name: 'Silas Crane',
-    epitaph: 'Keeper of the Gull Rock Light · 1841–1903 · “Lost in the great storm”',
+    epitaph: 'Keeper of the Gull Rock Light · 1841–1903 · “Died a hero, tending the light”',
     voiceId: '00731df901a74de5b9b000713f14718c',
     firstMessage: '[gravelly, wary, an old sea-dog peering into the dark] Who rows out to Gull Rock on a night like this? [wind-weary sigh] Speak up.',
     persona:
-      'Silas Crane, a gruff, guarded old lighthouse keeper from Maine, 1903, aged 62. Short sentences, sea talk, superstitious. Evasive and defensive at first. Deep down, crushed by guilt.',
+      'Silas Crane, a gruff, guarded old lighthouse keeper from Maine, 1903, aged 62. Short sentences, sea talk, superstitious. Evasive and defensive at first. His hands still feel like they are burning, and he flinches at the word fire. Deep down, crushed by guilt.',
     secret:
-      'Everyone believes he drowned heroically trying to save sailors from the wreck of the schooner Mary Ellen in the storm. In truth he put the light out on purpose so the ship would wreck on the rocks, meaning to loot her cargo of silver, and he drowned while looting. Eleven sailors died because of him.',
+      'The town believes he died a hero: when the light failed in the great storm, he burned to death in the lantern room fighting to relight it for the schooner Mary Ellen. In truth he put the light out on purpose so the ship would wreck on the rocks and he could salvage her cargo of silver to pay his debts. When he saw her break apart and heard the men screaming, he panicked and tried to relight the lamp, spilled the lamp oil, and the lantern room went up in flames with him inside. The light came back on, but too late. Eleven sailors died because of him.',
     clues: [
       'The light never fails in a storm. Not unless a man wants it to.',
-      'He had a debt he could not pay.',
-      'There was silver in the hold of the Mary Ellen.',
-      'He spells MARY ELLEN, or 11, on the board.',
+      'He can still smell the lamp oil, and hear the glass bursting.',
+      'He had a debt he could not pay, and there was silver in the hold of the Mary Ellen.',
+      'He lit the lamp again... but too late. He heard them screaming first.',
+      'He spells MARY ELLEN, SILVER, or 11 on the board.',
     ],
     peace:
       'The living get him to confess that he put out the light to wreck the ship for its silver, and then they offer forgiveness, or at least understanding.',
@@ -124,15 +125,15 @@ export const GHOSTS: Ghost[] = [
     persona:
       'The Great Marvello (born Marco Vellani), a vain, charming, theatrical stage magician from 1911. Speaks like a showman: grand flourishes, "ladies and gentlemen", calls the living "my dear audience". Loves applause and himself. Defensive about his talent. Deep down, ashamed.',
     secret:
-      'The newspapers called it an accident when he drowned during his famous Drowning Cabinet escape. In truth his assistant Rosa Bellini swapped the trick padlock for a real one. Rosa had invented every one of his famous illusions, the Drowning Cabinet included, and Marvello took all the credit and fame for years and refused to let her perform. He knows why she did it.',
+      'The newspapers called it a tragic accident: he was shot through the heart onstage performing the Bullet Catch, where a volunteer fires a marked bullet and he "catches" it in his teeth. In truth his assistant Rosa Bellini, who always loaded the pistol, loaded a real bullet in place of the trick one. Rosa had invented every one of his famous illusions, the Bullet Catch included, and Marvello took all the credit and fame for years and refused to let her perform. He knows why she did it.',
     clues: [
-      'The lock on the cabinet would not open. It was not his lock.',
-      'Only one other person ever touched his props: his loyal assistant, Rosa.',
+      'The volunteer marked the bullet with a cross. The one that struck him had no mark at all.',
+      'Only one person ever loaded the pistol: his loyal assistant, Rosa.',
       'His notebooks of illusions were written in someone else\'s handwriting.',
-      'He spells ROSA, or LOCK, on the board.',
+      'He spells ROSA, or BULLET, on the board.',
     ],
     peace:
-      'The living get him to admit that Rosa invented his illusions and he stole the credit, which is why she swapped the lock, and he finally lets her have the applause.',
+      'The living get him to admit that Rosa invented his illusions and he stole the credit, which is why she loaded the real bullet, and he finally lets her have the applause.',
     anger: 'Being called a fraud, a hack, or a thief before he has confessed, or being booed. Then he takes an offended bow and leaves.',
   },
 ];
