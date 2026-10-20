@@ -92,4 +92,7 @@ Vercel detects `src/server.ts` as a Fastify app automatically, and serves `publi
 2. **Rate limiting is built in (on Vercel only; locally the server is bound to localhost), but best effort.** `POST /api/session` allows 4 séances per visitor per 15 minutes and 40 per hour per server instance; past that it returns 429 and the page shows "The spirits are weary". The counts live in memory per instance (`src/limit.ts`), and Vercel runs several instances that restart, so this stops a looping script but isn't a hard cap. For a hard ceiling on spend, also add a **Vercel Firewall rate-limit rule** on `/api/session`, or keep Deployment Protection on. Every séance bills the key's workspace at about $0.06/min.
 3. Mic access works there, because Vercel serves over HTTPS.
 
-Why `tsconfig.json` has `rewriteRelativeImportExtensions`: Vercel compiles the TypeScript, and without the flag the compiled `server.js` still imports `./fish.ts`, which doesn't exist at runtime (`ERR_MODULE_NOT_FOUND`).
+Three Vercel-specific constraints, each found from a real failure (see ADR-7):
+- **`rewriteRelativeImportExtensions` in `tsconfig.json`.** Vercel compiles the TypeScript; without the flag the compiled `server.js` still imports `./fish.ts` (`ERR_MODULE_NOT_FOUND`).
+- **No ESM-only dependency loaded via `require()`.** Vercel's loader rejects it, so `@fastify/static` is pinned to `~9.3`. CI runs the server with `--no-experimental-require-module` to catch this.
+- **No top-level `await` in `src/server.ts`.** Vercel intercepts `listen()`, and an awaited listen hangs every request.

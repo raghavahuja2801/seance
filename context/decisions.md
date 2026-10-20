@@ -109,3 +109,9 @@
 - 3 unit tests (limit, sliding window, refusals don't extend the wait).
 - HTTP: local, the 5th request gets 429 with `Retry-After: 900`. Vercel mode: per-`X-Forwarded-For` quotas are independent.
 - The page shows "The spirits are weary" on 429.
+
+### ADR-7 addendum: two more Vercel failures, found with the Vercel connector (runtime logs)
+1. **`ERR_REQUIRE_ESM`** from `@fastify/static` 10. It `require()`s `content-disposition` 3, which is ESM-only. Node ≥ 22 allows require(esm), but Vercel's function loader (`/opt/rust/nodejs.js`) does not. Fix: pin `@fastify/static ~9.3` (Fastify 5, CommonJS `content-disposition` 1.x). Reproduced locally with `node --no-experimental-require-module`, and CI now starts the server with that flag.
+2. **Every request hung with no logs.** Top-level `await app.listen()` (and `await app.register()`). Vercel intercepts `listen()`, so the awaited promise never resolves and the module never finishes loading. Fix: no top-level await, matching Vercel's own Fastify example.
+
+Also: Vercel did **not** serve `public/` from its CDN for this Fastify project. Every path reached the function, so `@fastify/static` serves the page on Vercel too, and that works. Verified on the preview: `/`, `/seance.js`, `/brand/*.png` and `/api/ghosts` all return 200, with no runtime errors.
