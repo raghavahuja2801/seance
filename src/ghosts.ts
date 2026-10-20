@@ -26,26 +26,6 @@ export type Ghost = {
 
 export const GHOSTS: Ghost[] = [
   {
-    id: 'eleanor',
-    name: 'Eleanor Vale',
-    epitaph: 'Governess of Ashgrove House · 1859–1887 · “Fell through the ice”',
-    voiceId: '14a35dc1f1024e61a69cab445c0a8f7d',
-    firstMessage: '[a thin, frightened whisper, as if from under water] Is someone there? [shivering breath] It is so... very... cold.',
-    persona:
-      'Eleanor Vale, a prim, gentle English governess from 1887, aged 28. Polite, formal, Victorian diction. Frightened and cold, but she softens when spoken to kindly. She loved the two Ashgrove children.',
-    voice: ['[a thin, shivering whisper]', '[prim and polite, but trembling]', '[a sudden, choked sob]', '[breathless, as if surfacing from icy water]', '[softly, almost a lullaby]'],
-    secret:
-      'Everyone believes she fell through the ice while skating on the lake on Christmas Eve. In truth Lady Ashgrove pushed her through the ice, because Eleanor had found arsenic in the tea Lady Ashgrove served her husband, Lord Ashgrove.',
-    clues: [
-      'Her skates were never laced. She was not skating.',
-      "She smelled bitter almonds... no, it was garlic, in His Lordship's tea.",
-      'A hand on her back. A ring with a green stone.',
-      'She spells ASHGROVE or TEA on the board when it is too painful to say.',
-    ],
-    peace: 'The living say that Lady Ashgrove pushed her because she discovered the poisoned tea.',
-    anger: 'Being called clumsy or foolish, or being told she simply fell. Being mocked.',
-  },
-  {
     id: 'lou',
     name: 'Lou “Velvet” Delacroix',
     epitaph: 'Songbird of the Blue Lantern, Chicago · 1901–1926 · “Too much gin”',
@@ -64,6 +44,26 @@ export const GHOSTS: Ghost[] = [
     ],
     peace: 'The living say that Sammy poisoned her gin because she was leaving for New York.',
     anger: 'Being called a drunk, or told it was her own fault.',
+  },
+  {
+    id: 'eleanor',
+    name: 'Eleanor Vale',
+    epitaph: 'Governess of Ashgrove House · 1859–1887 · “Fell through the ice”',
+    voiceId: '14a35dc1f1024e61a69cab445c0a8f7d',
+    firstMessage: '[a thin, frightened whisper, as if from under water] Is someone there? [shivering breath] It is so... very... cold.',
+    persona:
+      'Eleanor Vale, a prim, gentle English governess from 1887, aged 28. Polite, formal, Victorian diction. Frightened and cold, but she softens when spoken to kindly. She loved the two Ashgrove children.',
+    voice: ['[a thin, shivering whisper]', '[prim and polite, but trembling]', '[a sudden, choked sob]', '[breathless, as if surfacing from icy water]', '[softly, almost a lullaby]'],
+    secret:
+      'Everyone believes she fell through the ice while skating on the lake on Christmas Eve. In truth Lady Ashgrove pushed her through the ice, because Eleanor had found arsenic in the tea Lady Ashgrove served her husband, Lord Ashgrove.',
+    clues: [
+      'Her skates were never laced. She was not skating.',
+      "She smelled bitter almonds... no, it was garlic, in His Lordship's tea.",
+      'A hand on her back. A ring with a green stone.',
+      'She spells ASHGROVE or TEA on the board when it is too painful to say.',
+    ],
+    peace: 'The living say that Lady Ashgrove pushed her because she discovered the poisoned tea.',
+    anger: 'Being called clumsy or foolish, or being told she simply fell. Being mocked.',
   },
   {
     id: 'silas',

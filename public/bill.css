@@ -92,7 +92,7 @@
   .act:nth-child(2n) { border-left: none; }
   .act:not(:nth-child(3n + 1)) { border-left: 1px solid rgba(191, 182, 160, .35); }
   .act:nth-child(odd) .act-name { font-size: clamp(1.9rem, min(2.7vw, 5vh), 3rem); }
-  .act:nth-child(even) .act-name { font-size: clamp(1.3rem, min(1.75vw, 3.4vh), 2rem); white-space: nowrap; }
+  .act:nth-child(even) .act-name { font-size: clamp(1.3rem, min(1.75vw, 3.4vh), 2rem); text-wrap: balance; }
   .snipe { top: 30px; right: -54px; }
 }
 
