@@ -123,3 +123,25 @@ Also: Vercel did **not** serve `public/` from its CDN for this Fastify project. 
 **Decision.** Delete `public/ambience.js` (drone + wind bed and every one-shot: candle hiss, planchette slide, creak/thud, peace chord, wrath hit), its offline level check, and the mute button, which had nothing left to mute. The ghosts' Drama 3 voices are unaffected.
 
 **Why.** Noise-based synthesis (filtered white noise for wind, hiss and slide) reads as static on real speakers. The level checks proved the mix was balanced, not that it sounded good. Drama 3's performed breaths, sighs and whispers already carry the atmosphere. If sound returns, use recorded, licensed foley, not synthesized noise.
+
+## ADR-10: Stagecraft refinement: a real board, real candles, and the curtains the direction promised
+
+**Feedback.** "The ouija board looks off, make it more realistic, along with the candle; what happened to the curtains?"
+
+**What changed** (refinement inside the Spirit Playbill world, recorded in the surface brief):
+- **The board** is an aged wooden talking board again, not flat print:
+  - SVG-turbulence wood grain, worn edge vignette, varnish sheen, period serif (IM Fell) lettering;
+  - a drawn sun face and crescent moon, corner stars;
+  - in perspective on the table;
+  - a heart-shaped wooden planchette with a brass-ringed glass lens.
+- **Candles return in place of the footlights.** Each is a shaded wax column with a drip, melt pool and wick, and a layered flame (white core, orange body, blue root) that flickers. Five sit around the board, with the back ones smaller for perspective. Same `.candle` / `.flame` / `.out` contract, so the snuff mechanic and the regression checks are unchanged.
+- **The proscenium:** oxblood velvet curtains (two fold rhythms plus grain) and a valance with swags and gold fringe.
+  - Closed while the séance connects.
+  - They part as the spirit arrives, leaving a fold framing each wing.
+  - They fall when the act ends, before the notice.
+  - Reduced motion cuts instantly.
+- **Why the curtains were missing:** the direction promised a stage and "raising the curtain", but the first build only shipped footlights. Recorded so that gap is visible.
+
+**Detector notes:**
+- The flame's blue-root radial gradient and the velvet's repeating fold gradient are the objects themselves (a flame, a cloth), not decoration; both are kept.
+- The wood shadows were switched to neutral black.
