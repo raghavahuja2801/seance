@@ -101,3 +101,4 @@
   - Scripted text sessions, 4 turns × 6 ghosts: tool-first fell from ~80% to ~46%. Tagged replies: Eleanor 14% → 50%, Agnes 50%, Marvello 75%, Silas 25%, Tommy 25%, **Lou still 0%**.
 - **Correction:** `call_count` stays 2 whenever any tool runs, because the platform always makes a follow-up call. Tool-first % is the right metric, not one-call %.
 - **Next:** human listening test; Lou may need persona work if she's still flat. `scripts/session-stats.ts [minutes]` measures any play session for free.
+- **Human listening test (2026-10-20, Raghav, local):** "its perfect". Shipped.
