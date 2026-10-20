@@ -4,7 +4,9 @@
 
 .bill {
   position: relative; width: min(100%, 980px); overflow: hidden; text-align: left;
-  padding: clamp(40px, 6vw, 72px) clamp(20px, 6vw, 72px) clamp(32px, 5vw, 56px);
+  /* Side padding must clear the printed frame below (24px of inset shadows) plus a gutter. */
+  --pad: clamp(40px, 6vw, 72px);
+  padding: clamp(40px, 6vw, 72px) var(--pad) clamp(32px, 5vw, 56px);
   background: var(--stock);
   /* Double printed border: a bone hairline inside an oxblood frame. */
   box-shadow: inset 0 0 0 10px var(--stock), inset 0 0 0 12px var(--bone-dim), inset 0 0 0 20px var(--stock), inset 0 0 0 24px var(--oxblood),
@@ -26,7 +28,7 @@
 /* World-earned exception to the 6rem display cap: the bill's title is woodtype set to the full measure. */
 .bill-title { font-size: clamp(3.4rem, min(15vw, 13vh), 9.5rem); color: var(--bone); letter-spacing: .02em; }
 .band {
-  margin: var(--space-4) calc(-1 * clamp(20px, 6vw, 72px)) 0; padding: .55em 1em;
+  margin: var(--space-4) calc(-1 * var(--pad)) 0; padding: .55em 1em;
   background: var(--oxblood); color: var(--bone);
   font: 800 clamp(1.1rem, 3vw, 1.75rem)/1 var(--face-gothic); letter-spacing: .22em; text-transform: uppercase;
 }
@@ -83,7 +85,7 @@
 }
 @media (min-width: 1100px) {
   #summon.active { padding: 64px 32px 16px; }
-  .bill { width: min(100%, 1360px); padding: clamp(28px, 4vh, 52px) clamp(40px, 5vw, 80px) clamp(24px, 3vh, 40px); }
+  .bill { --pad: clamp(40px, 5vw, 80px); width: min(100%, 1360px); padding: clamp(28px, 4vh, 52px) var(--pad) clamp(24px, 3vh, 40px); }
   .ritual { max-width: 82ch; margin-top: clamp(10px, 2vh, 22px); font-size: clamp(1.05rem, 1.25vw, 1.3rem); }
   .band { margin-top: clamp(12px, 2.4vh, 24px); }
   .acts { grid-template-columns: repeat(3, 1fr); }
