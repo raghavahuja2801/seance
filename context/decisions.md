@@ -145,3 +145,13 @@ Also: Vercel did **not** serve `public/` from its CDN for this Fastify project. 
 **Detector notes:**
 - The flame's blue-root radial gradient and the velvet's repeating fold gradient are the objects themselves (a flame, a cloth), not decoration; both are kept.
 - The wood shadows were switched to neutral black.
+
+## ADR-11: Pin the agent's LLM in code
+
+**Problem.** The ghosts stopped using the board in early turns (R-13). Someone had switched the live agent from Gemini 3.6 Flash to GPT-4o in the dashboard, and since `agentConfig` left `llm` unset, nothing in the repo noticed.
+
+**Options.** (a) Pin Gemini 3.6 Flash, the model every tool eval (R-6..R-12) was tuned on. (b) Keep GPT-4o and retune the prompt and evals for it.
+
+**Decision.** (a), chosen by Raghav. `src/agent.ts` sets `llm.model`, and `provision.ts` asserts the draft carries it, like `tts_model`.
+
+**Tradeoffs.** Running `npm run provision` now overwrites any dashboard model experiment. To try another model, change it in code and re-run `scripts/eval-tools.ts` first.

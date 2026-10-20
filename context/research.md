@@ -121,3 +121,11 @@
 - **Limitation:** iOS Safari ignores `HTMLMediaElement.volume`, so Marvello stays ~8 dB hot on iPhone and iPad. A real fix would be loudness levelling at the platform/TTS side.
 - **Tool eval (Marvello):** 17/18. The single miss is the known flaky rude → snuff case.
 - **Not done:** Tommy is also ~5 dB hot (−19.8), but nobody has complained yet; `gain` can trim him the same way.
+
+## R-13: "The board doesn't move until a few turns in" (2026-10-20)
+- **Session logs, per user turn:** sessions up to 07:29 used `seance_spell` (often with a snuff) from turn 1. From 07:31 on, Lou and Eleanor went 3–6 turns with no tool call at all.
+- **Cause: the LLM changed under us.** Versions v4 ("v2", 07:30) and v5 ("v3", 07:31) were published from the dashboard and switched `llm.model` from `google/gemini-3.6-flash` to `openai/gpt-4o`. The input tokens per turn also fell from ~5.4k to ~2.6k. `agentConfig` never set `llm`, so neither `provision.ts` nor the evals noticed. GPT-4o treats the powers as optional until the story gets going ("Hey, who are you?" → a chatty reply, no spell).
+- **Fix:** pin `llm.model: 'google/gemini-3.6-flash'` in `src/agent.ts`. `provision.ts` now fails if the draft's model differs. Published v6.
+- **Verified live** by replaying the quiet 18:03 Lou session's opening lines (scratch Playwright script, ~45 s of agent time per run). Turn 1 spelled LOU (2/2 runs) and ELEANOR (1/1), against no tools for four turns on GPT-4o.
+- **Side fix:** `check-candles.cjs` picked Lou as `li:nth-child(2)`, which broke when Lou moved to the first card; it now picks Lou by name. Passes.
+- **Lesson:** pin every model the behaviour was tuned on. A dashboard edit can republish the agent silently, and the session items' `llm_usage.tokens[].model` is where to spot it.
