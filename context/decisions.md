@@ -73,3 +73,22 @@
 - `check-flame.cjs` was mutation-tested: injecting the old opacity-flicker keyframes makes it fail.
 
 **Consequence.** Prompt or behaviour regressions in the ghosts aren't caught by CI. Run `eval-tools.ts` by hand after changing `src/ghosts.ts`. A manual `workflow_dispatch` job with an API-key secret would be the next step if that becomes a pain.
+
+## ADR-7: Deploy on Vercel's zero-config Fastify, with import extensions rewritten
+
+**Problem.** The first Vercel deploy 500'd on every request with `ERR_MODULE_NOT_FOUND: /var/task/src/fish.ts imported from /var/task/src/server.js`. Vercel compiles `src/server.ts` to JS but keeps the import specifiers as written. We write `./fish.ts` because Node runs the sources directly.
+
+**Options considered**
+1. **`.js` specifiers in source** (the common workaround). Breaks local `node src/server.ts`: Node's type stripping doesn't map `.js` to `.ts`.
+2. **A separate build step and a bundled entry.** More moving parts, and it fights Vercel's entrypoint detection.
+3. **`rewriteRelativeImportExtensions: true`** (TS ≥ 5.7). Sources keep `.ts`, and compiled output gets `.js`.
+
+**Decision.** Option 3.
+- **Verified locally:** compiling without the flag reproduces Vercel's exact output (`from './fish.ts'`). With the flag, it emits `"./fish.js"`, and the compiled server boots and serves `/api/ghosts`.
+- **Also changed:**
+  - `@fastify/static` only registers if `public/` exists (Vercel serves it from the CDN, and the function bundle may not include it).
+  - `listen({ port })` on Vercel, matching Vercel's example.
+
+**Not verified:** an actual Vercel build. That needs the user's Vercel account.
+
+**Open risk.** A public URL plus no rate limit means anyone can run séances on our key. Keep Deployment Protection on until a limiter exists.

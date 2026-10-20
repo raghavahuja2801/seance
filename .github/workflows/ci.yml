@@ -46,7 +46,9 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Start server
         run: |
-          node src/server.ts > server.log 2>&1 &
+          # --no-experimental-require-module: Vercel's loader rejects require() of ES modules,
+          # which Node 22+ otherwise allows; fail here instead of in production.
+          node --no-experimental-require-module src/server.ts > server.log 2>&1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:8790/api/ghosts > /dev/null && exit 0; sleep 1; done
           cat server.log; exit 1
       - run: npm run check:browser

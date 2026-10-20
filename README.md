@@ -79,3 +79,17 @@ node scripts/check-ambience.cjs <path-to-playwright>   # e.g. ../../repos/platfo
 | Ghost tool-use eval | `node --env-file=.env scripts/eval-tools.ts [repeat] [ghosts]` | API key, ~5–10 min | ❌ manual |
 
 CI (`.github/workflows/ci.yml`) runs `unit` and `browser` on every pull request and on pushes to `main`. Neither uses secrets. The browser job boots the server with a dummy agent id because no session is ever created.
+
+## Deploying to Vercel
+
+Vercel detects `src/server.ts` as a Fastify app automatically, and serves `public/` from its CDN. You don't need a build command or `vercel.json`.
+
+1. **Environment variables** (Project → Settings → Environment Variables):
+   - `FISH_API_KEY`
+   - `SEANCE_AGENT_ID` (`e50a415a2d504903be9344809564ed7c`)
+
+   Without `SEANCE_AGENT_ID` the server refuses to boot.
+2. **Keep Deployment Protection on**, or put a rate limiter in front, before sharing a public URL. `POST /api/session` has no rate limit, and every séance bills the key's workspace at about $0.06/min.
+3. Mic access works there, because Vercel serves over HTTPS.
+
+Why `tsconfig.json` has `rewriteRelativeImportExtensions`: Vercel compiles the TypeScript, and without the flag the compiled `server.js` still imports `./fish.ts`, which doesn't exist at runtime (`ERR_MODULE_NOT_FOUND`).
