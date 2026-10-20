@@ -92,3 +92,26 @@
 **Not verified:** an actual Vercel build. That needs the user's Vercel account.
 
 **Open risk.** A public URL plus no rate limit means anyone can run séances on our key. Keep Deployment Protection on until a limiter exists.
+
+## ADR-8: In-memory rate limit on session creation, as a first line
+
+**Problem.** On a public URL, anyone can call `POST /api/session` in a loop, and each session bills the Fish key (~$0.06/min, up to 10 min).
+
+**Options considered**
+1. **In-memory sliding window in the server.** No new dependencies or accounts. Per instance only.
+2. **Shared store** (Upstash/Redis via the Vercel Marketplace). A real global cap, but a new dependency, account and secret.
+3. **Vercel Firewall rate-limit rule.** Edge-level and global, configured in the dashboard, not in code.
+4. **Origin check.** Skipped: browsers on other sites already fail the CORS preflight for our JSON POST, and curl can forge Origin.
+
+**Decision.** Option 1 now: 4 per IP per 15 min, 40 per instance per hour, applied only when deployed (`VERCEL` set). Locally the server is bound to localhost, and limiting would just block the developer. It runs before validation, so refused requests cost nothing, and it returns 429 with `Retry-After`. On Vercel, `trustProxy` reads the client IP from `X-Forwarded-For`. Option 3 is recommended in the README for a hard cap.
+
+**Verified:**
+- 3 unit tests (limit, sliding window, refusals don't extend the wait).
+- HTTP: local, the 5th request gets 429 with `Retry-After: 900`. Vercel mode: per-`X-Forwarded-For` quotas are independent.
+- The page shows "The spirits are weary" on 429.
+
+### ADR-7 addendum: two more Vercel failures, found with the Vercel connector (runtime logs)
+1. **`ERR_REQUIRE_ESM`** from `@fastify/static` 10. It `require()`s `content-disposition` 3, which is ESM-only. Node ≥ 22 allows require(esm), but Vercel's function loader (`/opt/rust/nodejs.js`) does not. Fix: pin `@fastify/static ~9.3` (Fastify 5, CommonJS `content-disposition` 1.x). Reproduced locally with `node --no-experimental-require-module`, and CI now starts the server with that flag.
+2. **Every request hung with no logs.** Top-level `await app.listen()` (and `await app.register()`). Vercel intercepts `listen()`, so the awaited promise never resolves and the module never finishes loading. Fix: no top-level await, matching Vercel's own Fastify example.
+
+Also: Vercel did **not** serve `public/` from its CDN for this Fastify project. Every path reached the function, so `@fastify/static` serves the page on Vercel too, and that works. Verified on the preview: `/`, `/seance.js`, `/brand/*.png` and `/api/ghosts` all return 200, with no runtime errors.
