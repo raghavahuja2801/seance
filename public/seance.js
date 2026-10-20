@@ -319,25 +319,53 @@ $('again').addEventListener('click', () => {
   show('summon');
 });
 
-// ---------- Picker ----------
-const SIGILS = {
-  eleanor: '<path d="M17 3v28M5 10l24 14M29 10L5 24M13 5l4 4 4-4M13 29l4-4 4 4"/>', // frost
-  lou: '<path d="M12 26a4 4 0 1 1-1-3V6l14-3v19a4 4 0 1 1-1-3V8L12 10"/>', // note
-  silas: '<path d="M14 31l2-20h2l2 20zM13 11h8M17 11V7M17 7l-12-4M17 7l12-4M11 31h12"/>', // lighthouse
-  agnes: '<path d="M17 3v6M17 9c-5 0-8 4-8 9 0 6 4 13 8 13s8-7 8-13c0-5-3-9-8-9zM12 20h10"/>', // noose-knot apple
-  tommy: '<path d="M14 6h6v4h-6zM12 10h10v6H12zM13 16h8l-1 14h-6zM10 12h2M22 12h2"/>', // tin soldier
-  marvello: '<path d="M10 25h14M12 25l1-14h8l1 14M9 11h16M14 6l-3-3M20 6l3-3M17 6V2"/>', // top hat and sparks
-};
+// ---------- The bill ----------
+// One audio element for every preview, so only one spirit speaks at a time.
+const preview = new Audio();
+let previewing = null;
+function stopPreview() {
+  preview.pause();
+  previewing?.setAttribute('aria-pressed', 'false');
+  previewing = null;
+}
+preview.addEventListener('ended', stopPreview);
+
+function hear(g, button) {
+  const again = previewing === button;
+  stopPreview();
+  if (again) return;
+  preview.src = `voices/${g.id}.mp3`;
+  preview.play().catch((err) => log('preview failed', err?.message ?? String(err)));
+  button.setAttribute('aria-pressed', 'true');
+  previewing = button;
+}
+
 function renderGhosts(ghosts) {
   $('ghosts').replaceChildren(
-    ...ghosts.map((g) => {
+    ...ghosts.map((g, i) => {
+      // Epitaphs read "role · dates · “cover story”"; the bill sets each part in its own type.
+      const [role, dates, story] = g.epitaph.split(' · ');
       const li = document.createElement('li');
-      const b = document.createElement('button');
-      b.innerHTML = `<svg class="sigil" viewBox="0 0 34 34" aria-hidden="true">${SIGILS[g.id] ?? '<circle cx="17" cy="17" r="10"/>'}</svg><span class="name"></span><span class="epitaph"></span>`;
-      b.querySelector('.name').textContent = g.name;
-      b.querySelector('.epitaph').textContent = g.epitaph;
-      b.addEventListener('click', () => summon(g, b));
-      li.append(b);
+      li.className = 'act print';
+      li.style.setProperty('--d', `${0.45 + i * 0.08}s`);
+      li.innerHTML = `<div><h3 class="act-name ink"></h3><p class="act-role"></p><p class="act-meta"><span class="dates"></span> · <q></q></p></div>
+        <div class="act-actions">
+          <button class="btn hear" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Hear</button>
+          <button class="btn btn-stamp summon">Summon</button>
+        </div>`;
+      li.querySelector('.act-name').textContent = g.name;
+      li.querySelector('.act-role').textContent = role;
+      li.querySelector('.dates').textContent = dates;
+      li.querySelector('q').textContent = story;
+      const hearBtn = li.querySelector('.hear');
+      hearBtn.setAttribute('aria-label', `Hear ${g.name}`);
+      hearBtn.addEventListener('click', () => hear(g, hearBtn));
+      const summonBtn = li.querySelector('.summon');
+      summonBtn.setAttribute('aria-label', `Summon ${g.name}`);
+      summonBtn.addEventListener('click', () => {
+        stopPreview();
+        summon(g, summonBtn);
+      });
       return li;
     }),
   );
