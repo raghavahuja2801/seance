@@ -64,7 +64,7 @@
 **Decision.**
 - **In CI:** two GitHub Actions jobs on every PR and on pushes to main.
   - `unit`: typecheck + `node --test`.
-  - `browser`: Playwright Chromium against the real server; the candle regression check plus the offline ambience levels.
+  - `browser`: Playwright Chromium against the real server; the candle regression check (the ambience-levels check was removed with the sound, ADR-9).
 - **Kept out:** the live checks (`check-candles.cjs`, `eval-tools.ts`).
 
 **Why.**
@@ -115,3 +115,11 @@
 2. **Every request hung with no logs.** Top-level `await app.listen()` (and `await app.register()`). Vercel intercepts `listen()`, so the awaited promise never resolves and the module never finishes loading. Fix: no top-level await, matching Vercel's own Fastify example.
 
 Also: Vercel did **not** serve `public/` from its CDN for this Fastify project. Every path reached the function, so `@fastify/static` serves the page on Vercel too, and that works. Verified on the preview: `/`, `/seance.js`, `/brand/*.png` and `/api/ghosts` all return 200, with no runtime errors.
+
+## ADR-9: Remove the synthesized ambience
+
+**Problem.** Play-testing on the deployed site: "remove all the bg sound effects, it sounds like static". This came after two rounds of lowering the mix (0.9 → 0.6 → 0.42) and removing the planchette tap.
+
+**Decision.** Delete `public/ambience.js` (drone + wind bed and every one-shot: candle hiss, planchette slide, creak/thud, peace chord, wrath hit), its offline level check, and the mute button, which had nothing left to mute. The ghosts' Drama 3 voices are unaffected.
+
+**Why.** Noise-based synthesis (filtered white noise for wind, hiss and slide) reads as static on real speakers. The level checks proved the mix was balanced, not that it sounded good. Drama 3's performed breaths, sighs and whispers already carry the atmosphere. If sound returns, use recorded, licensed foley, not synthesized noise.
