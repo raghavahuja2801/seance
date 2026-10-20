@@ -86,3 +86,19 @@
 - **Six distinct deaths now:** ice, poison, fire, gallows, a trap, a gunshot.
 - **Tool eval** (`silas,marvello`): 35/36. The single miss was Silas rude → snuff 2/3, on a case that was 9/9 before; treated as run-to-run noise.
 - **Guideline for future ghosts:** vary cause of death, and vary twist type (murdered by someone vs. guilty themselves vs. tragic accident).
+
+## R-11: "All the ghosts got flatter" (2026-10-20)
+- **Can't see the directions directly.** The worker strips `[bracket]` directions from transcripts, stored session items *and* the test runner's `agent_reply`. `platform-api` has no stripping code; it happens in the fish-agent worker. Paired `<whisper>`/`<emphasis>` tags do survive in stored items, so the paired-tag rate is the visible proxy.
+- **Finding 1: tool-first turns.** Since PR 4 (powers tuning), 74–100% of replies were tool-first. LLM call #1 returned only tool calls ~0.4 s after the user spoke, and the spoken line came from a follow-up call 6–9 s later. Stats: Eleanor 74% tool-first and 14% tagged; Lou 80% and 3%.
+- **Finding 2: the platform prompt is large.** About 5,100 input tokens per turn, against our ~1,000-token prompt. So the worker adds ~4k tokens (expressive guide + tool schemas) that compete with ours.
+- **Changes (`src/ghosts.ts` only):**
+  - "Always speak first": the spoken line comes before any power, in the same response.
+  - A per-ghost `voice` palette of in-character directions.
+  - Every reply opens with a direction plus at least one sound or tag, and doesn't reuse the last direction.
+  - The voice section moved to the end of the prompt.
+- **Results:**
+  - Tool eval: 108/108, no regression.
+  - Scripted text sessions, 4 turns × 6 ghosts: tool-first fell from ~80% to ~46%. Tagged replies: Eleanor 14% → 50%, Agnes 50%, Marvello 75%, Silas 25%, Tommy 25%, **Lou still 0%**.
+- **Correction:** `call_count` stays 2 whenever any tool runs, because the platform always makes a follow-up call. Tool-first % is the right metric, not one-call %.
+- **Next:** human listening test; Lou may need persona work if she's still flat. `scripts/session-stats.ts [minutes]` measures any play session for free.
+- **Human listening test (2026-10-20, Raghav, local):** "its perfect". Shipped.

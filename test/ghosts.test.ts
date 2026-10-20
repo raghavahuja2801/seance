@@ -27,6 +27,19 @@ test('every prompt names every tool and teaches Drama 3 brackets', () => {
   }
 });
 
+test('every ghost has its own palette of bracketed directions, and the voice guide comes last', () => {
+  for (const g of GHOSTS) {
+    assert.ok(g.voice.length >= 3, `${g.id} needs a voice palette`);
+    for (const v of g.voice) assert.match(v, /^\[[^\]]+\]$/, `${g.id}: ${v}`);
+    const p = buildPrompt(g);
+    for (const v of g.voice) assert.ok(p.includes(v), `${g.id} prompt is missing ${v}`);
+    // Models weight the end of the prompt most; "how to speak" must not be buried under the tool rules.
+    assert.ok(p.indexOf('## How your voice works') > p.indexOf('## Your powers over the room'));
+    // Speak-first: one LLM call per turn, written in character (see context/research.md R-11).
+    assert.match(p, /Always speak first/);
+  }
+});
+
 test('session request overrides exactly the allowed fields', () => {
   const g = GHOSTS[0]!;
   const req = sessionRequest(g, 'agent123');
