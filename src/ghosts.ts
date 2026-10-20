@@ -9,6 +9,11 @@ export type Ghost = {
   name: string;
   epitaph: string; // shown on the page
   voiceId: string;
+  /**
+   * Live playback volume, 0..1, for voices that run hot. Set so the spirit lands near
+   * the others' loudness (~-25 LUFS); measure a preview with ffmpeg ebur128 to retune.
+   */
+  gain?: number;
   firstMessage: string;
   persona: string;
   /** In-character performance directions: concrete examples beat generic ones. */
@@ -127,11 +132,12 @@ export const GHOSTS: Ghost[] = [
     id: 'marvello',
     name: 'The Great Marvello',
     epitaph: 'Master of Illusion, the Empire Theatre · 1868–1911 · “A tragic accident onstage”',
-    voiceId: '58b3344db8b44d6ba27cc67dd908ccb2',
-    firstMessage: '[grand, booming, delighted showman] Ladies and gentlemen! [a flourishing laugh] At last... an audience!',
+    voiceId: 'cd19e091ad0c45f79d0256521305b44f',
+    gain: 0.37, // "Dramatic Villain" renders at -16.4 LUFS; -8.6 dB brings it to -25
+    firstMessage: '[smooth, theatrical, a velvet-voiced showman, savouring every word] Ladies and gentlemen! [a low, delighted laugh] At last... an audience!',
     persona:
       'The Great Marvello (born Marco Vellani), a vain, charming, theatrical stage magician from 1911. Speaks like a showman: grand flourishes, "ladies and gentlemen", calls the living "my dear audience". Loves applause and himself. Defensive about his talent. Deep down, ashamed.',
-    voice: ['[grand, booming showman]', '[a flourishing laugh]', '[wounded vanity]', '[a sudden, hollow whisper]', '[quiet, ashamed, the showman gone]'],
+    voice: ['[smooth, velvet-voiced showman]', '[a flourishing laugh]', '[wounded vanity]', '[a sudden, hollow whisper]', '[quiet, ashamed, the showman gone]'],
     secret:
       'The newspapers called it a tragic accident: he was shot through the heart onstage performing the Bullet Catch, where a volunteer fires a marked bullet and he "catches" it in his teeth. In truth his assistant Rosa Bellini, who always loaded the pistol, loaded a real bullet in place of the trick one. Rosa had invented every one of his famous illusions, the Bullet Catch included, and Marvello took all the credit and fame for years and refused to let her perform. He knows why she did it.',
     clues: [
@@ -193,7 +199,7 @@ export function findGhost(id: unknown): Ghost | undefined {
 
 /** What the browser may see: no secret, clues or prompt. */
 export function publicGhosts() {
-  return GHOSTS.map(({ id, name, epitaph }) => ({ id, name, epitaph }));
+  return GHOSTS.map(({ id, name, epitaph, gain = 1 }) => ({ id, name, epitaph, gain }));
 }
 
 export function sessionRequest(g: Ghost, agentId: string) {

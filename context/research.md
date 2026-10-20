@@ -102,3 +102,22 @@
 - **Correction:** `call_count` stays 2 whenever any tool runs, because the platform always makes a follow-up call. Tool-first % is the right metric, not one-call %.
 - **Next:** human listening test; Lou may need persona work if she's still flat. `scripts/session-stats.ts [minutes]` measures any play session for free.
 - **Human listening test (2026-10-20, Raghav, local):** "its perfect". Shipped.
+
+## R-12: Marvello too loud; new voice and a per-spirit live gain (2026-10-20)
+- **Measured loudness of the previews (ffmpeg ebur128):**
+  - Marvello ("Theatrical Showman" with a `[grand, booming…]` direction): **−15.3 LUFS**.
+  - Lou −23.9, Agnes −24.2, Silas −27.9, Tommy −19.8, Eleanor (whisper) −35.6.
+  - So Marvello was ~9 dB hot.
+- **Auditions:** 13 generic library voices, each rendered with a softer direction and loudness-matched to −24 LUFS on a local listening page, so the choice was by character, not volume. Loudness comes mostly from the reference voice: 10 of 12 rendered at −15 to −20 LUFS even with a "smooth" direction.
+- **Choice: "Dramatic Villain" `cd19e091ad0c45f79d0256521305b44f`.**
+  - Direction: `[smooth, theatrical, a velvet-voiced showman, savouring every word]`. Same words as before.
+  - Palette: "booming" becomes "smooth, velvet-voiced".
+- **Level:**
+  - The new line renders at −16.4 LUFS, so `gain: 0.37` (−8.6 dB) in `src/ghosts.ts`. The page applies it with `session.setOutputVolume()`.
+  - The preview mp3 got the same −8.6 dB and now measures −25.4 LUFS.
+- **SDK facts, read from source:**
+  - `setOutputVolume()` sets `.volume` on the SDK's own detached `<audio>` element. It's applied whether called before or after the element exists.
+  - `getOutputVolume()` is an **RMS level meter**, not the setting.
+- **Limitation:** iOS Safari ignores `HTMLMediaElement.volume`, so Marvello stays ~8 dB hot on iPhone and iPad. A real fix would be loudness levelling at the platform/TTS side.
+- **Tool eval (Marvello):** 17/18. The single miss is the known flaky rude → snuff case.
+- **Not done:** Tommy is also ~5 dB hot (−19.8), but nobody has complained yet; `gain` can trim him the same way.

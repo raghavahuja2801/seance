@@ -15,7 +15,8 @@ test('the browser never sees secrets, clues or prompts', () => {
     assert.ok(!pub.includes(g.secret));
     for (const c of g.clues) assert.ok(!pub.includes(c));
   }
-  assert.deepEqual(Object.keys(publicGhosts()[0]!).sort(), ['epitaph', 'id', 'name']);
+  assert.deepEqual(Object.keys(publicGhosts()[0]!).sort(), ['epitaph', 'gain', 'id', 'name']);
+  for (const g of publicGhosts()) assert.ok(g.gain > 0 && g.gain <= 1, `${g.id} gain must be in (0, 1]`);
 });
 
 test('every prompt names every tool and teaches Drama 3 brackets', () => {
