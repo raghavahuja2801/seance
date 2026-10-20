@@ -28,133 +28,10 @@ button {
 button:hover { border-color: var(--ember); box-shadow: 0 0 22px rgba(255,179,71,.22); }
 button:active { transform: scale(.98); }
 
-/* ---------- Atmosphere layers ---------- */
-.fog { position: fixed; inset: -20%; pointer-events: none; z-index: 1; opacity: .5; mix-blend-mode: screen; filter: blur(40px); }
-.fog-a { background: radial-gradient(ellipse 40% 25% at 30% 70%, rgba(120,110,140,.22), transparent 70%), radial-gradient(ellipse 35% 20% at 75% 80%, rgba(100,90,120,.18), transparent 70%); animation: fog-drift 70s linear infinite alternate; }
-.fog-b { background: radial-gradient(ellipse 45% 18% at 60% 90%, rgba(130,120,150,.2), transparent 70%), radial-gradient(ellipse 30% 22% at 15% 30%, rgba(90,80,110,.12), transparent 70%); animation: fog-drift 95s linear infinite alternate-reverse; }
-@keyframes fog-drift { to { transform: translate3d(12%, -4%, 0); } }
-.dust { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
-.candlelight {
-  position: fixed; inset: 0; pointer-events: none; z-index: 3; mix-blend-mode: soft-light;
-  background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(255,170,80,.55), transparent 70%);
-  opacity: calc((.35 + var(--flicker) * .06 + var(--voice) * .35) * var(--light));
-}
-.vignette {
-  position: fixed; inset: 0; pointer-events: none; z-index: 4;
-  background: radial-gradient(ellipse 85% 75% at 50% 48%, transparent 40%, rgba(0,0,0,calc(.97 - var(--light) * .42)) 100%);
-  transition: background 1.6s;
-}
-main { position: relative; z-index: 10; }
-
 /* ---------- Screens ---------- */
 .screen { display: none; min-height: 100dvh; padding: 5rem 16px 3rem; text-align: center; flex-direction: column; align-items: center; justify-content: center; }
 .screen.active { display: flex; animation: rise-in 1.4s var(--ease-out); }
 @keyframes rise-in { from { opacity: 0; transform: translateY(12px); filter: blur(6px); } }
-
-/* ---------- Room ---------- */
-#room { justify-content: flex-start; gap: .4rem; padding-top: 3.8rem; }
-.status { color: var(--ink-dim); font-style: italic; margin: .35rem 0 0; min-height: 1.5em; transition: opacity .4s; }
-/* Sized to the viewport height too, so the board, captions and button all fit without scrolling. */
-.table { position: relative; width: min(100%, 900px, calc((100dvh - 470px) * 1.7)); min-width: min(100%, 520px); padding: 30px 0 46px; perspective: 1400px; }
-.board-tilt { transform: rotateX(24deg); transform-origin: 50% 70%; transition: transform 1.2s var(--ease-out); }
-
-.board {
-  position: relative; width: 100%; aspect-ratio: 1.55; border-radius: 26px;
-  background:
-    radial-gradient(ellipse 60% 55% at 50% 48%, rgba(255,190,110,calc(.10 + var(--voice) * .16)), transparent 70%),
-    radial-gradient(ellipse at 50% 45%, var(--wood-hi), var(--wood) 72%, #1c0f06 100%),
-    var(--wood);
-  box-shadow:
-    inset 0 0 70px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,210,150,.08),
-    0 0 calc(24px + var(--voice) * 90px) rgba(255,179,71,calc(.06 + var(--voice) * .3)),
-    0 40px 60px -10px rgba(0,0,0,.9);
-  filter: brightness(calc(.45 + var(--light) * .55));
-  transition: filter 1.6s;
-}
-.board::before { /* grain */
-  content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--wood-grain); background-size: cover; mix-blend-mode: multiply; opacity: .9; pointer-events: none;
-}
-.ornament { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.ornament rect { fill: none; stroke: rgba(20,10,3,.7); stroke-width: .5; vector-effect: non-scaling-stroke; }
-.ornament rect + rect { stroke: rgba(230,190,130,.12); }
-.board .glyph {
-  position: absolute; transform: translate(-50%, -50%) rotate(var(--r));
-  font-family: 'IM Fell English SC', serif; color: var(--engrave); font-size: clamp(1rem, 3.7vw, 2.2rem);
-  text-shadow: 0 1px 0 rgba(255,215,160,.22), 0 -1px 0 rgba(0,0,0,.4);
-  transition: color .3s, text-shadow .3s; user-select: none;
-}
-.board .glyph.word { font-size: clamp(.9rem, 2.8vw, 1.6rem); letter-spacing: .12em; }
-.board .glyph.lit { color: #ffd38a; text-shadow: 0 0 6px var(--ember), 0 0 22px var(--ember); }
-.sun, .moon { position: absolute; top: 9%; width: clamp(26px, 5vw, 46px); }
-.sun { left: 29%; } .moon { right: 29%; }
-.sun svg, .moon svg { width: 100%; display: block; }
-.sun circle, .sun path { fill: none; stroke: var(--engrave); stroke-width: 2.4; stroke-linecap: round; }
-.moon path { fill: var(--engrave); }
-
-.planchette {
-  position: absolute; left: 50%; top: 60%; width: 11.5%; z-index: 2;
-  transform: translate(-50%, -52%) rotate(var(--tilt, 0deg));
-  filter: drop-shadow(0 8px 6px rgba(0,0,0,.65));
-  transition: left .9s var(--ease-out), top .9s var(--ease-out), transform .9s var(--ease-out);
-}
-.planchette svg { display: block; width: 100%; }
-.planchette .body { stroke: #5a4024; stroke-width: 2; }
-.planchette .lens { fill: rgba(255,240,210,.08); stroke: #7c5f36; stroke-width: 3.5; }
-.planchette .glint { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 2.5; stroke-linecap: round; }
-.planchette.drift { animation: drift 7s ease-in-out infinite; }
-@keyframes drift { 50% { translate: 1.5% 1.2%; rotate: 3deg; } }
-
-/* ---------- Candles ---------- */
-.candles { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
-.candle { position: absolute; width: 18px; height: 58px; transform: translate(-50%, -100%); }
-.candle::before { /* wax */
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, #cbbd9d, #f4ead2 45%, #b3a483); border-radius: 4px 4px 2px 2px;
-  box-shadow: 0 6px 10px rgba(0,0,0,.6);
-}
-.candle::after { /* glow pooled on the table */
-  content: ''; position: absolute; left: 50%; bottom: -14px; width: 120px; height: 34px; margin-left: -60px; border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255,170,70,.28), transparent 70%); transition: opacity .6s;
-}
-.flame {
-  position: absolute; left: 50%; bottom: 100%; width: 14px; height: 28px; margin-left: -7px;
-  background: radial-gradient(ellipse at 50% 72%, #fffbe8 0%, #ffd27a 32%, rgba(255,120,30,.85) 60%, transparent 72%);
-  border-radius: 50% 50% 40% 40%; transform-origin: 50% 90%;
-  transform: scale(calc(1 + var(--voice) * .55 + var(--flicker) * .06));
-  animation: flicker 1.3s infinite alternate ease-in-out;
-  box-shadow: 0 0 calc(26px + var(--voice) * 40px) 7px rgba(255,170,60,.33);
-  transition: opacity .35s;
-}
-.candle:nth-child(2n) .flame { animation-duration: 1.7s; }
-.candle:nth-child(3n) .flame { animation-duration: 1.1s; }
-/* Flicker via brightness, never opacity: an animated opacity overrides .out and the flame would never go out. */
-@keyframes flicker { 0% { rotate: -3deg; filter: brightness(.9); } 50% { rotate: 2deg; filter: brightness(1.05); } 100% { rotate: -1deg; filter: brightness(.85); } }
-.candle.unlit .flame, .candle.out .flame { opacity: 0; }
-.candle.unlit::after, .candle.out::after { opacity: 0; }
-.candle.out .smoke {
-  position: absolute; left: 50%; bottom: 100%; width: 6px; height: 46px; margin-left: -3px;
-  background: linear-gradient(to top, rgba(210,210,210,.5), transparent); filter: blur(3px);
-  animation: smoke 2.8s ease-out forwards;
-}
-@keyframes smoke { to { transform: translateY(-60px) scaleX(3.2); opacity: 0; } }
-body[data-mode="thinking"] .flame { animation-duration: .35s; }
-
-/* ---------- Shaking ---------- */
-body.shake-gentle .table { animation: shake .5s 3; }
-body.shake-violent main { animation: shake-hard .12s 14; }
-body.shake-violent .vignette { background: radial-gradient(ellipse at 50% 45%, rgba(208,26,56,.18) 20%, rgba(0,0,0,.95) 100%); }
-@keyframes shake { 25% { transform: translate(-3px, 1px) rotate(-.4deg); } 75% { transform: translate(3px, -1px) rotate(.4deg); } }
-@keyframes shake-hard { 25% { transform: translate(-10px, 5px) rotate(-1deg); } 75% { transform: translate(10px, -6px) rotate(1deg); } }
-
-/* ---------- Captions: words surface like ink ---------- */
-.captions { width: min(100%, 760px); min-height: 8rem; }
-.you { color: var(--ink-dim); font-style: italic; margin: 0 0 .5rem; min-height: 1.4em; font-size: 1rem; }
-.you:not(:empty)::before { content: 'You: '; opacity: .7; }
-.spirit { font-size: clamp(1.2rem, 3.2vw, 1.6rem); line-height: 1.5; margin: 0; min-height: 3em; text-shadow: 0 0 calc(4px + var(--voice) * 18px) rgba(255,179,71,.55); }
-.spirit .w { display: inline-block; animation: ink .9s var(--ease-out) both; white-space: pre; }
-@keyframes ink { from { opacity: 0; filter: blur(8px); transform: translateY(4px); } }
-.spelled { font-family: 'IM Fell English SC', serif; letter-spacing: .55em; color: var(--ember); min-height: 1.5em; margin: .7rem 0 0; text-shadow: 0 0 12px rgba(255,179,71,.6); }
-.end { margin-top: .4rem; font-size: 1rem; opacity: .8; }
 
 /* ---------- Endings ---------- */
 body.peace { --ember: #ffe9a8; }
@@ -162,20 +39,6 @@ body.peace .vignette { background: radial-gradient(ellipse at 50% 40%, rgba(255,
 body.wrath #ending-title { color: var(--blood); text-shadow: 0 0 28px rgba(208,26,56,.75); }
 
 
-/* ---------- Mobile ---------- */
-@media (max-width: 640px) {
-  #room { padding-top: 3.8rem; }
-  .table { padding: 22px 0 34px; }
-  .board-tilt { transform: rotateX(12deg); }
-  .board { border-radius: 16px; }
-  .planchette { width: 14%; }
-  .candle { width: 11px; height: 34px; }
-  .candle::after { width: 60px; margin-left: -30px; }
-  .flame { width: 10px; height: 19px; margin-left: -5px; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .fog, .flame, .planchette.drift, body.shake-gentle .table, body.shake-violent main, .spirit .w, .screen.active { animation: none !important; }
-  .planchette { transition-duration: .2s; }
+  .screen.active { animation: none !important; }
 }
-

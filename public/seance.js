@@ -4,7 +4,7 @@ const SDK_URL = 'https://cdn.jsdelivr.net/npm/@fishaudio/agent-client@0.3.0/+esm
 const $ = (id) => document.getElementById(id);
 const DEBUG = new URLSearchParams(location.search).has('debug');
 const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const CANDLE_SPOTS = [[4, 22], [96, 22], [2, 74], [98, 74], [50, 100]]; // % of .table, around the board
+const FOOTLIGHTS = 5;
 const REST = { x: 50, y: 58 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -59,21 +59,20 @@ function spell(raw) {
   const steps = spellSteps(raw);
   spelling = spelling.then(async () => {
     planchette.classList.remove('drift');
-    $('spelled').textContent = '';
     for (const step of steps) {
       if (step === ' ') {
         movePlanchette(REST);
-        $('spelled').textContent += ' ';
         await sleep(600);
         continue;
       }
       movePlanchette(spots[step]);
       await sleep(950);
-      glyphs[step].classList.add('lit');
-      $('spelled').textContent += step;
+      // What the spirit spells stays inked on the board.
+      glyphs[step].classList.add('lit', 'inked');
       await sleep(450);
       glyphs[step].classList.remove('lit');
     }
+    if (steps.length) record(steps.join(''));
     await sleep(800);
     movePlanchette(REST);
     planchette.style.setProperty('--tilt', '0deg');
@@ -82,14 +81,20 @@ function spell(raw) {
   return steps.join('');
 }
 
+// Each spelled word joins the record beside the board, newest on top, rising as the truth builds.
+function record(word) {
+  const li = document.createElement('li');
+  li.className = 'print';
+  li.textContent = word;
+  $('record').append(li);
+}
+
 // ---------- Candles ----------
 function placeCandles() {
   $('candles').replaceChildren(
-    ...CANDLE_SPOTS.map(([x, y]) => {
+    ...Array.from({ length: FOOTLIGHTS }, () => {
       const c = document.createElement('div');
       c.className = 'candle unlit';
-      c.style.left = `${x}%`;
-      c.style.top = `${y}%`;
       c.innerHTML = '<div class="flame"></div><div class="smoke"></div>';
       return c;
     }),
@@ -135,7 +140,10 @@ function shakeRoom(intensity) {
 // ---------- Captions: words surface like ink ----------
 function renderSpirit(text) {
   const el = $('spirit');
-  const words = stripDirections(text).split(' ').filter(Boolean);
+  const clean = stripDirections(text);
+  const words = clean.split(' ').filter(Boolean);
+  // Short lines are set huge; long ones step down so a whole line stays on stage.
+  el.style.setProperty('--fit', clean.length <= 50 ? '4.6rem' : clean.length <= 100 ? '3.4rem' : clean.length <= 170 ? '2.5rem' : '2rem');
   const spans = el.children;
   for (let i = 0; i < words.length; i++) {
     const word = words[i] + (i < words.length - 1 ? ' ' : '');
@@ -143,7 +151,7 @@ function renderSpirit(text) {
       if (spans[i].textContent !== word) spans[i].textContent = word; // refined in place, no re-animation
     } else {
       const s = document.createElement('span');
-      s.className = 'w';
+      s.className = 'w print';
       s.textContent = word;
       el.append(s);
     }
@@ -151,27 +159,7 @@ function renderSpirit(text) {
   while (spans.length > words.length) spans[spans.length - 1].remove();
 }
 
-// ---------- Ambient loop: flicker, voice glow, dust ----------
-const dust = $('dust');
-const dctx = dust.getContext('2d');
-let motes = [];
-function sizeDust() {
-  const dpr = Math.min(2, devicePixelRatio || 1);
-  dust.width = innerWidth * dpr;
-  dust.height = innerHeight * dpr;
-  dctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  motes = Array.from({ length: innerWidth < 640 ? 22 : 45 }, () => ({
-    x: Math.random() * innerWidth,
-    y: Math.random() * innerHeight,
-    r: 0.6 + Math.random() * 1.6,
-    vx: (Math.random() - 0.5) * 0.12,
-    vy: -0.05 - Math.random() * 0.15,
-    a: 0.15 + Math.random() * 0.35,
-  }));
-}
-sizeDust();
-addEventListener('resize', sizeDust);
-
+// ---------- Ambient loop: gaslight flicker and the spirit's voice ----------
 let flicker = 0;
 function frame() {
   const root = document.documentElement.style;
@@ -189,18 +177,6 @@ function frame() {
     level = Math.min(1, sum / data.length / 90);
   }
   root.setProperty('--voice', level.toFixed(3));
-  if (REDUCED_MOTION) return requestAnimationFrame(frame);
-
-  dctx.clearRect(0, 0, innerWidth, innerHeight);
-  for (const m of motes) {
-    m.x += m.vx + flicker * 0.05;
-    m.y += m.vy;
-    if (m.y < -5) { m.y = innerHeight + 5; m.x = Math.random() * innerWidth; }
-    dctx.beginPath();
-    dctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
-    dctx.fillStyle = `rgba(255, 210, 150, ${(m.a * (0.8 + level * 0.8)).toFixed(3)})`;
-    dctx.fill();
-  }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -218,7 +194,8 @@ const clientTools = {
   },
 };
 
-const MODE_TEXT = { listening: 'The spirit is listening… speak.', thinking: 'The air grows cold…', speaking: '' };
+const MODE_TEXT = { listening: 'The spirit listens. Speak.', thinking: 'The spirit is thinking', speaking: '' };
+const setStatus = (text) => ($('status').querySelector('.label').textContent = text);
 
 async function summon(g, button) {
   ghost = g;
@@ -234,10 +211,13 @@ async function summon(g, button) {
     if (!res.ok) throw Object.assign(new Error(body.error ?? `HTTP ${res.status}`), { status: res.status });
 
     document.body.className = '';
+    delete document.body.dataset.mode;
     $('ghost-name').textContent = g.name;
-    $('status').textContent = 'Reaching across the veil…';
+    setStatus('Reaching across the veil…');
+    $('record').replaceChildren();
+    Object.values(glyphs).forEach((el) => el.classList.remove('inked', 'lit'));
     $('spirit').replaceChildren();
-    $('you').textContent = $('spelled').textContent = '';
+    $('you').textContent = '';
     placeCandles();
     movePlanchette(REST);
     planchette.classList.add('drift');
@@ -251,7 +231,7 @@ async function summon(g, button) {
 
     session.on('modeChange', (mode) => {
       document.body.dataset.mode = mode;
-      $('status').textContent = MODE_TEXT[mode] ?? '';
+      setStatus(MODE_TEXT[mode] ?? '');
     });
     let lastSegment = null;
     const onAgentText = ({ segmentId, text }) => {

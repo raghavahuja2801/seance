@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
   page.on('console', (m) => m.text().startsWith('[seance] tool') && console.log(m.text()));
   await page.goto('http://127.0.0.1:8790/?debug');
   await page.waitForSelector('#summon.active');
-  await page.click('#ghosts li:nth-child(2) button'); // Lou
+  await page.click('#ghosts li:nth-child(2) .summon'); // Lou
   await page.waitForFunction(() => window.__session, null, { timeout: 30000 });
   await page.waitForTimeout(6000); // let her finish the first line
   await page.evaluate(() => window.__session.sendUserMessage("Honestly this is boring. Hurry up, I don't have all night.", { audio: true }));

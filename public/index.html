@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="ink.css">
   <link rel="stylesheet" href="seance.css">
   <link rel="stylesheet" href="bill.css">
+  <link rel="stylesheet" href="stage.css">
 </head>
 <body aria-busy="true">
   <div class="brand">
@@ -23,13 +24,6 @@
       <img class="logo-livekit" src="brand/livekit-logo.svg" alt="LiveKit" width="841" height="189">
     </a>
   </div>
-
-  <!-- Atmosphere: fixed layers behind everything -->
-  <div class="fog fog-a" aria-hidden="true"></div>
-  <div class="fog fog-b" aria-hidden="true"></div>
-  <canvas id="dust" class="dust" aria-hidden="true"></canvas>
-  <div class="candlelight" aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
 
   <!-- Ornaments: drawn once, used everywhere -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -64,51 +58,43 @@
       </article>
     </section>
 
-    <!-- 2. The séance -->
+    <!-- 2. The stage: the spirit performs -->
     <section id="room" class="screen" aria-labelledby="ghost-name">
-      <header class="room-head">
-        <h2 id="ghost-name"></h2>
-        <p id="status" class="status" aria-live="polite">Reaching across the veil…</p>
+      <header class="stage-head">
+        <h2 id="ghost-name" class="stage-name gothic"></h2>
+        <p id="status" class="status" aria-live="polite"><span class="label">Reaching across the veil…</span><span class="thinking" aria-hidden="true"><svg class="icon"><use href="#i-fleuron"/></svg><svg class="icon"><use href="#i-fleuron"/></svg><svg class="icon"><use href="#i-fleuron"/></svg></span></p>
       </header>
 
+      <div class="words">
+        <p id="spirit" class="spirit ink" aria-live="polite"></p>
+        <p id="you" class="you"></p>
+      </div>
+
       <div class="table">
-        <div class="candles" id="candles" aria-hidden="true"></div>
-        <div class="board-tilt">
-          <div class="board" id="board" role="img" aria-label="Ouija board">
-            <svg class="ornament" viewBox="0 0 155 100" preserveAspectRatio="none" aria-hidden="true">
-              <rect x="3" y="3" width="149" height="94" rx="9" />
-              <rect x="5.5" y="5.5" width="144" height="89" rx="7" />
+        <div class="board" id="board" role="img" aria-label="Ouija board">
+          <div class="sun" aria-hidden="true">
+            <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="7"/><path d="M20 3v7M20 30v7M3 20h7M30 20h7M8 8l5 5M27 27l5 5M32 8l-5 5M13 27l-5 5"/></svg>
+          </div>
+          <div class="moon" aria-hidden="true">
+            <svg viewBox="0 0 40 40"><path d="M26 6a14 14 0 1 0 8 22A11 11 0 1 1 26 6z"/></svg>
+          </div>
+          <div class="planchette" id="planchette" aria-hidden="true">
+            <svg viewBox="0 0 100 120">
+              <path class="body" d="M50 4C72 30 96 58 92 88c-3 20-22 28-42 28S11 108 8 88C4 58 28 30 50 4z"/>
+              <circle class="lens" cx="50" cy="62" r="17"/>
             </svg>
-            <div class="sun" aria-hidden="true">
-              <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="7"/><g>
-                <path d="M20 3v7M20 30v7M3 20h7M30 20h7M8 8l5 5M27 27l5 5M32 8l-5 5M13 27l-5 5"/></g></svg>
-            </div>
-            <div class="moon" aria-hidden="true">
-              <svg viewBox="0 0 40 40"><path d="M26 6a14 14 0 1 0 8 22A11 11 0 1 1 26 6z"/></svg>
-            </div>
-            <div class="planchette" id="planchette" aria-hidden="true">
-              <svg viewBox="0 0 100 120">
-                <defs>
-                  <radialGradient id="bone" cx="50%" cy="35%" r="70%">
-                    <stop offset="0" stop-color="#f6ead0"/><stop offset=".7" stop-color="#cdb48a"/><stop offset="1" stop-color="#9c8158"/>
-                  </radialGradient>
-                </defs>
-                <path class="body" d="M50 4C72 30 96 58 92 88c-3 20-22 28-42 28S11 108 8 88C4 58 28 30 50 4z" fill="url(#bone)"/>
-                <circle class="lens" cx="50" cy="62" r="17"/>
-                <path class="glint" d="M40 54a12 12 0 0 1 9-6"/>
-              </svg>
-            </div>
           </div>
         </div>
+        <aside class="record" aria-label="Spelled from beyond">
+          <h3>From beyond</h3>
+          <ol id="record"></ol>
+        </aside>
       </div>
 
-      <div class="captions">
-        <p id="you" class="you"></p>
-        <p id="spirit" class="spirit" aria-live="polite"></p>
-        <p id="spelled" class="spelled" aria-label="Spelled on the board"></p>
-      </div>
-
-      <button id="end" class="end">Close the circle</button>
+      <footer class="stage-foot">
+        <div class="footlights" id="candles" aria-hidden="true"></div>
+        <button id="end" class="btn end">Close the circle</button>
+      </footer>
     </section>
 
     <!-- 3. Ending -->
