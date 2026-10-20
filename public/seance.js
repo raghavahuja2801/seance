@@ -4,7 +4,9 @@ const SDK_URL = 'https://cdn.jsdelivr.net/npm/@fishaudio/agent-client@0.3.0/+esm
 const $ = (id) => document.getElementById(id);
 const DEBUG = new URLSearchParams(location.search).has('debug');
 const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const FOOTLIGHTS = 5;
+// Candles on the table around the board: [x %, y % of the tabletop, height px, scale].
+// The back pair sits smaller, as the board recedes in perspective.
+const CANDLE_SPOTS = [[6, 30, 64, .8], [94, 28, 78, .8], [-1, 86, 92, 1], [101, 88, 70, 1], [50, 30, 52, .7]]; // the last stands between sun and moon
 const REST = { x: 50, y: 58 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -92,10 +94,14 @@ function record(word) {
 // ---------- Candles ----------
 function placeCandles() {
   $('candles').replaceChildren(
-    ...Array.from({ length: FOOTLIGHTS }, () => {
+    ...CANDLE_SPOTS.map(([x, y, h, scale]) => {
       const c = document.createElement('div');
       c.className = 'candle unlit';
-      c.innerHTML = '<div class="flame"></div><div class="smoke"></div>';
+      c.style.left = `${x}%`;
+      c.style.top = `${y}%`;
+      c.style.setProperty('--h', `${h}px`);
+      c.style.setProperty('--s', scale);
+      c.innerHTML = '<div class="wax"></div><div class="wick"></div><div class="flame"></div><div class="smoke"></div>';
       return c;
     }),
   );
@@ -227,6 +233,7 @@ async function summon(g, button) {
     session = await AgentSession.start({ sessionToken: body, clientTools });
     session.setOutputVolume(g.gain ?? 1); // some voices run hot; keep every spirit at a similar level
     await lighting;
+    document.body.classList.add('curtain-open'); // the curtains part as the spirit arrives
     log('connected', session.sessionId, g.id);
     if (DEBUG) window.__session = session; // lets tests type to the spirit (see scripts/check-candles.cjs)
 
@@ -271,6 +278,7 @@ async function summon(g, button) {
 function finish(reason) {
   log('ended:', reason, 'peace=', foundPeace);
   session = null;
+  document.body.classList.remove('curtain-open'); // the curtain falls; the notice follows
   const name = ghost?.name ?? 'The spirit';
   if (foundPeace) {
     document.body.classList.add('peace');
