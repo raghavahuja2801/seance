@@ -1,0 +1,50 @@
+/* The Notices: how an act ends, as a printed slip pasted over the bill. */
+
+#ending.active { display: grid; place-items: center; padding: 72px 16px 48px; }
+
+.notice {
+  position: relative; width: min(100%, 620px); padding: clamp(32px, 6vw, 56px) clamp(24px, 6vw, 56px);
+  background: var(--bone); color: var(--stock); text-align: center;
+  transform: rotate(-1.2deg);
+  /* Pasted paper: a soft, offset shadow and the faintest wrinkle of paste at the edges. */
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .15), 0 26px 50px -18px rgba(0, 0, 0, .75), inset 0 0 0 1px rgba(23, 27, 61, .12);
+  animation: paste .7s var(--ease-out) both;
+}
+@keyframes paste { from { opacity: 0; transform: rotate(-4deg) translateY(18px) scale(1.03); } }
+
+#ending-title { font: 400 clamp(2rem, 6vw, 3.4rem)/1 var(--face-fat); color: var(--stock); }
+.notice .rule { margin: var(--space-4) auto; width: 60%; border-top: 1px solid currentColor; border-bottom: 3px double currentColor; padding-top: 3px; color: rgba(23, 27, 61, .5); }
+#ending-text { margin: 0 auto; max-width: 38ch; font: italic 1.2rem/1.5 var(--face-roman); color: #2a2f57; } /* 9.9:1 on bone */
+
+.notice-record { margin: var(--space-4) 0 0; font: 600 .95rem/1.4 var(--face-gothic); letter-spacing: .14em; text-transform: uppercase; color: #3c4170; }
+.notice-record:empty { display: none; }
+.notice-record b { color: var(--oxblood-deep); font-weight: 800; }
+
+.notice .btn { margin-top: var(--space-5); color: var(--stock); }
+.notice .btn:hover { background: var(--stock); color: var(--bone); }
+
+/* The stamp, struck across the slip at an angle, in the ink of the ending. */
+.stamp {
+  /* Struck at the corner, overhanging the slip's edge, so it never covers the title. */
+  position: absolute; top: -22px; right: -26px; margin: 0; pointer-events: none;
+  padding: .35em .7em; border: 4px solid currentColor; border-radius: 6px;
+  font: 800 clamp(1.4rem, 4.4vw, 2.2rem)/1 var(--face-gothic); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--oxblood); transform: rotate(14deg); opacity: .88;
+  -webkit-mask-image: var(--worn); mask-image: var(--worn); -webkit-mask-size: 160px; mask-size: 160px;
+  animation: strike .4s .55s var(--ease-out) both; /* a stamp strikes and stops; it never bounces */
+}
+@keyframes strike { from { opacity: 0; transform: rotate(14deg) scale(1.8); } }
+#ending[data-kind="wrath"] .stamp { top: -34px; right: -34px; font-size: clamp(2rem, 7vw, 3.4rem); transform: rotate(12deg); }
+#ending[data-kind="wrath"] .stamp { animation-name: strike-wrath; }
+@keyframes strike-wrath { from { opacity: 0; transform: rotate(12deg) scale(2); } }
+#ending[data-kind="peace"] .stamp { color: #2f5a3e; }   /* the one ending that is not a loss */
+#ending[data-kind="closed"] .stamp, #ending[data-kind="lost"] .stamp, #ending[data-kind="silent"] .stamp { color: var(--stock); opacity: .7; }
+
+@media (max-width: 640px) {
+  .stamp, #ending[data-kind="wrath"] .stamp { right: -6px; top: -26px; }
+  .notice { padding-top: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice, .stamp { animation: none; }
+}

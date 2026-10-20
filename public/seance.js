@@ -259,6 +259,7 @@ async function summon(g, button) {
       err?.status === 429
         ? 'Too many séances have been held tonight. Rest a while, then try again in a few minutes.'
         : micDenied ? 'They need to hear your voice. Allow the microphone and try again.' : 'Nothing answered from beyond. Try again in a moment.',
+      'silent',
       0,
     );
   } finally {
@@ -272,23 +273,31 @@ function finish(reason) {
   const name = ghost?.name ?? 'The spirit';
   if (foundPeace) {
     document.body.classList.add('peace');
-    endingScreen(`${name} is at peace`, 'The cold lifts. Every candle burns warm again. Thank you for listening.');
+    endingScreen(`${name} is at peace`, 'The cold lifts. Every candle burns warm again. Thank you for listening.', 'peace');
   } else if (reason === 'agent_hangup') {
     snuffAll();
     document.body.classList.add('wrath');
-    endingScreen(`${name} has left in anger`, 'Every flame dies at once. The circle is broken, and the truth stays buried.');
+    endingScreen(`${name} has left in anger`, 'Every flame dies at once. The circle is broken, and the truth stays buried.', 'wrath');
   } else if (reason === 'user_hangup') {
-    endingScreen('You closed the circle', `${name} drifts back into the dark, still restless.`);
+    endingScreen('You closed the circle', `${name} drifts back into the dark, still restless.`, 'closed');
   } else {
-    endingScreen('The spirits have gone quiet', 'The connection to the other side was lost.');
+    endingScreen('The spirits have gone quiet', 'The connection to the other side was lost.', 'lost');
   }
 }
 
-function endingScreen(title, text, delay = 1800) {
+// Each ending is a printed notice with its own stamp, pasted over the bill.
+const STAMPS = { peace: 'At peace', wrath: 'Cancelled', closed: 'Curtain down', lost: 'Interrupted', silent: 'No answer' };
+
+function endingScreen(title, text, kind, delay = 1800) {
   // Let the last effect play before the room fades out.
   setTimeout(() => {
+    $('ending').dataset.kind = kind;
+    $('ending-stamp').textContent = STAMPS[kind];
     $('ending-title').textContent = title;
     $('ending-text').textContent = text;
+    const words = [...$('record').children].map((li) => li.textContent);
+    $('ending-record').innerHTML = words.length ? '<b>From beyond:</b> ' : '';
+    $('ending-record').append(words.join(' · '));
     show('ending');
   }, delay);
 }

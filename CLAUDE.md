@@ -15,7 +15,10 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 - `src/ghosts.ts`: the ghost roster and prompt builder (secrets stay server-side).
 - `src/server.ts`: Fastify. `GET /api/ghosts` (public info) and `POST /api/session {ghost}` (returns the SDK session token). Binds to 127.0.0.1 only.
 - `public/brand/`: logos. `fish-audio-logo.png` is the official docs `logo/dark.png`, trimmed of transparent padding; `livekit-logo.svg` is LiveKit's wordmark from platform-web `images/enterprise/logo-livekit.svg`, filled white.
-- `public/`: the page. `index.html`, `seance.css`, `seance.js` (SDK from jsDelivr, tool handlers, endings) and `lib.js` (pure helpers, tested in Node).
+- `public/`: the page, designed as **the Spirit Playbill** (an 1890s stage-spiritualism show; see `DESIGN.md` and `.impeccable/surfaces/public-index-html.md`).
+  - `index.html`, `seance.js` (SDK from jsDelivr, tool handlers, the bill, stage and notices), `lib.js` (pure helpers, tested in Node).
+  - Styles by surface: `ink.css` (tokens, self-hosted faces, letterpress material, the two-pass print, lockup, loader), `bill.css` (intro and picker), `stage.css` (the live séance), `notice.css` (endings).
+  - `fonts/` (self-hosted, OFL) and `voices/` (Drama 3 opening-line previews for the bill's Hear buttons, provenance in `voices/README.txt`; regenerate with `npm run audition -- public/voices`).
 - `scripts/audition.ts`: render each ghost's first line with Drama 3.
 - `scripts/check-candles.cjs`: live end-to-end check that a ghost's snuff really darkens a candle (computed style).
 - `scripts/eval-tools.ts`: tool-use eval harness (platform tool tests on the draft; see research R-6).
@@ -28,6 +31,7 @@ A Ouija-board web page where you talk by voice to ghosts. Each ghost is one sess
 - `npm test`, `npm run typecheck`, `npm run check:browser` (server running). CI runs all three (`.github/workflows/ci.yml`, jobs `unit` and `browser`). Live checks (`check-candles.cjs`, `eval-tools.ts`) are manual because they cost agent time.
 
 ## Conventions
+- Product truth lives in `PRODUCT.md`; the visual system in `DESIGN.md`. UI work goes through the impeccable skill (installed at `~/projects/pi-bot-gh/.github/skills/impeccable`).
 - Node ≥ 22.18 runs `.ts` directly (type stripping); no build step. Same setup as `experiments/ASR_demo`.
 - `.env` holds `FISH_API_KEY` and `SEANCE_AGENT_ID`. Never commit it, and never send the key to the browser.
 - Client tool names are prefixed `seance_` because tools are workspace-wide.

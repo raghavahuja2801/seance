@@ -8,7 +8,7 @@
   text-align: center;
   /* The stage is lit from below by the footlights; the light falls away as they go out. */
   background:
-    radial-gradient(ellipse 80% 55% at 50% 100%, rgba(245, 187, 77, calc(.16 * var(--light) + .05 * var(--flicker))), transparent 70%),
+    linear-gradient(to top, rgba(245, 187, 77, calc(.12 * var(--light) + .03 * var(--flicker))), transparent 42%),
     var(--stock-deep);
   transition: background 1.2s;
 }
@@ -40,8 +40,6 @@ body[data-mode="thinking"] .status .label { position: absolute; width: 1px; heig
 .spirit {
   margin: 0; max-width: 28ch; color: var(--bone);
   font: 800 min(var(--fit, 3.4rem), 9vw)/1.02 var(--face-gothic); text-transform: uppercase; letter-spacing: .01em;
-  /* Gaslight from the footlights catches the type while the spirit speaks. */
-  text-shadow: 0 0 calc(var(--voice) * 26px) rgba(245, 187, 77, .45);
   min-height: 1.1em;
 }
 .spirit .w { display: inline-block; white-space: pre; }
@@ -64,10 +62,10 @@ body[data-mode="thinking"] .status .label { position: absolute; width: 1px; heig
 .board .glyph {
   position: absolute; transform: translate(-50%, -50%) rotate(var(--r));
   font: 700 clamp(.95rem, 2.6vw, 1.7rem)/1 var(--face-gothic); color: var(--bone); user-select: none;
-  transition: color .25s, text-shadow .25s;
+  transition: color .25s, transform .25s var(--ease-out);
 }
 .board .glyph.word { font: 400 clamp(.8rem, 2vw, 1.25rem)/1 var(--face-fat); letter-spacing: .04em; }
-.board .glyph.lit { color: var(--gas); text-shadow: 0 0 14px rgba(245, 187, 77, .7); }
+.board .glyph.lit { color: var(--gas); transform: translate(-50%, -50%) rotate(var(--r)) scale(1.25); }
 /* What the spirit spells stays inked on the board. */
 .board .glyph.inked:not(.lit) { color: var(--oxblood); text-shadow: 1px 1px 0 rgba(0, 0, 0, .4); }
 .sun, .moon { position: absolute; top: 9%; width: clamp(22px, 4vw, 38px); color: var(--bone-dim); }
@@ -110,7 +108,6 @@ body[data-mode="thinking"] .status .label { position: absolute; width: 1px; heig
   background: radial-gradient(ellipse at 50% 75%, #fff7dc 0%, var(--gas) 38%, rgba(245, 120, 40, .8) 62%, transparent 74%);
   border-radius: 50% 50% 40% 40%; transform-origin: 50% 90%;
   transform: scale(calc(1 + var(--voice) * .4 + var(--flicker) * .05));
-  box-shadow: 0 -6px 28px 8px rgba(245, 187, 77, .3);
   /* Flicker via brightness, never opacity: an animated opacity overrides .out and the flame would never go out. */
   animation: flicker 1.3s infinite alternate ease-in-out;
   transition: opacity .35s;
