@@ -81,7 +81,7 @@ a { color: inherit; text-underline-offset: .2em; }
   min-height: 44px; padding: .8rem 1.4rem; border: 2px solid currentColor; border-radius: 0;
   transition: background-color .2s, color .2s, transform .12s var(--ease-out);
 }
-.btn:hover { background: var(--bone); color: var(--stock); }
+.btn:hover { background: var(--bone); color: var(--stock); box-shadow: none; }
 .btn:active { transform: translateY(1px); }
 .btn[disabled], .btn[aria-busy="true"] { opacity: .5; cursor: progress; }
 .btn-stamp { background: var(--oxblood); border-color: var(--oxblood); color: var(--bone); }

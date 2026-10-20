@@ -17,10 +17,8 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
 h1, h2 { font-family: 'IM Fell English SC', serif; font-weight: normal; letter-spacing: .08em; margin: 0; text-wrap: balance; }
-h1 { font-size: clamp(3.2rem, 12vw, 6.5rem); text-shadow: 0 0 40px rgba(255,179,71,.3), 0 0 2px rgba(255,220,170,.4); }
 h2 { font-size: clamp(1.7rem, 5.5vw, 2.6rem); text-shadow: 0 0 24px rgba(255,179,71,.25); }
 .lede { font-style: italic; color: var(--ink-dim); font-size: 1.2rem; line-height: 1.5; max-width: 36rem; margin: 1rem auto; }
-.fine { color: var(--ink-dim); font-size: 1rem; line-height: 1.5; max-width: 32rem; margin: 2.5rem auto 0; }
 
 button {
   font: inherit; font-size: 1.1rem; color: var(--ink); background: rgba(10,6,4,.35); cursor: pointer;
@@ -52,24 +50,6 @@ main { position: relative; z-index: 10; }
 .screen { display: none; min-height: 100dvh; padding: 5rem 16px 3rem; text-align: center; flex-direction: column; align-items: center; justify-content: center; }
 .screen.active { display: flex; animation: rise-in 1.4s var(--ease-out); }
 @keyframes rise-in { from { opacity: 0; transform: translateY(12px); filter: blur(6px); } }
-
-/* ---------- Spirit picker: calling cards ---------- */
-.ghosts { list-style: none; padding: 0; margin: 2.2rem 0 0; display: grid; gap: 1rem; width: min(100%, 60rem); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-.ghosts li { opacity: 0; animation: rise-in 1s var(--ease-out) forwards; }
-.ghosts li:nth-child(2) { animation-delay: .12s; } .ghosts li:nth-child(3) { animation-delay: .24s; }
-.ghosts li:nth-child(4) { animation-delay: .36s; } .ghosts li:nth-child(5) { animation-delay: .48s; } .ghosts li:nth-child(6) { animation-delay: .6s; }
-@keyframes card-in { to { opacity: 1; } }
-.ghosts li { animation-name: rise-in, card-in; }
-.ghosts button {
-  width: 100%; height: 100%; padding: 1.6rem 1.25rem 1.4rem; display: grid; gap: .6rem; justify-items: center; text-align: center;
-  background: linear-gradient(180deg, rgba(40,26,16,.55), rgba(14,9,6,.7)), var(--wood-grain);
-  border: 1px solid rgba(201,168,106,.28); box-shadow: inset 0 0 0 4px rgba(0,0,0,.25), inset 0 0 0 5px rgba(201,168,106,.12), 0 10px 30px rgba(0,0,0,.6);
-}
-.ghosts button:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 4px rgba(0,0,0,.25), inset 0 0 0 5px rgba(201,168,106,.25), 0 14px 40px rgba(0,0,0,.7), 0 0 40px rgba(255,179,71,.15); }
-.ghosts .sigil { width: 34px; height: 34px; stroke: var(--ember); fill: none; stroke-width: 1.4; opacity: .75; }
-.ghosts .name { font-family: 'IM Fell English SC', serif; font-size: 1.45rem; }
-.ghosts .epitaph { color: var(--ink-dim); font-style: italic; font-size: .98rem; line-height: 1.4; }
-.ghosts button[aria-busy="true"] { opacity: .6; cursor: progress; }
 
 /* ---------- Room ---------- */
 #room { justify-content: flex-start; gap: .4rem; padding-top: 3.8rem; }
@@ -192,13 +172,10 @@ body.wrath #ending-title { color: var(--blood); text-shadow: 0 0 28px rgba(208,2
   .candle { width: 11px; height: 34px; }
   .candle::after { width: 60px; margin-left: -30px; }
   .flame { width: 10px; height: 19px; margin-left: -5px; }
-  .ghosts { grid-template-columns: 1fr; }
-  .fine { margin-top: 1.8rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fog, .flame, .planchette.drift, body.shake-gentle .table, body.shake-violent main, .spirit .w, .ghosts li, .screen.active { animation: none !important; }
-  .ghosts li { opacity: 1; }
+  .fog, .flame, .planchette.drift, body.shake-gentle .table, body.shake-violent main, .spirit .w, .screen.active { animation: none !important; }
   .planchette { transition-duration: .2s; }
 }
 

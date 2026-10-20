@@ -1,0 +1,78 @@
+/* The Bill: the intro and the spirit picker, as a stage-spiritualism playbill. */
+
+#summon.active { display: grid; place-items: start center; padding: 72px 16px 48px; }
+
+.bill {
+  position: relative; width: min(100%, 980px); overflow: hidden; text-align: left;
+  padding: clamp(40px, 6vw, 72px) clamp(20px, 6vw, 72px) clamp(32px, 5vw, 56px);
+  background: var(--stock);
+  /* Double printed border: a bone hairline inside an oxblood frame. */
+  box-shadow: inset 0 0 0 10px var(--stock), inset 0 0 0 12px var(--bone-dim), inset 0 0 0 20px var(--stock), inset 0 0 0 24px var(--oxblood),
+              0 30px 60px -20px rgba(0, 0, 0, .7);
+}
+
+/* A pasted-on strip across the corner, as real posters were updated on the wall. */
+.snipe {
+  position: absolute; top: 34px; right: -58px; transform: rotate(32deg);
+  width: 260px; padding: 8px 0; text-align: center;
+  background: var(--oxblood); color: var(--bone);
+  font: 800 .95rem/1 var(--face-gothic); letter-spacing: .28em; text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
+  display: flex; align-items: center; justify-content: center; gap: .6em;
+}
+.snipe .icon { width: .7em; height: .7em; }
+
+.bill-head { text-align: center; }
+/* World-earned exception to the 6rem display cap: the bill's title is woodtype set to the full measure. */
+.bill-title { font-size: clamp(4rem, 15vw, 9.5rem); color: var(--bone); letter-spacing: .02em; }
+.band {
+  margin: var(--space-4) calc(-1 * clamp(20px, 6vw, 72px)) 0; padding: .55em 1em;
+  background: var(--oxblood); color: var(--bone);
+  font: 800 clamp(1.1rem, 3vw, 1.75rem)/1 var(--face-gothic); letter-spacing: .22em; text-transform: uppercase;
+}
+.ritual {
+  max-width: 34ch; margin: var(--space-4) auto 0;
+  font: italic clamp(1.15rem, 2.4vw, 1.4rem)/1.45 var(--face-roman); color: var(--bone);
+}
+
+.ornament-rule { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-5) 0 var(--space-4); color: var(--bone-dim); }
+.ornament-rule::before, .ornament-rule::after { content: ''; flex: 1; height: 0; border-top: 1px solid currentColor; border-bottom: 3px double currentColor; padding-top: 3px; }
+.ornament-rule .icon { width: 44px; height: 22px; color: var(--oxblood); }
+
+.acts-title { text-align: center; font: 600 1rem/1 var(--face-gothic); letter-spacing: .4em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: var(--space-3); }
+
+.acts { list-style: none; margin: 0; padding: 0; }
+.act {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--space-2) var(--space-4); align-items: center;
+  padding: var(--space-4) 0;
+  border-top: 1px solid rgba(191, 182, 160, .35);
+}
+.act:last-child { border-bottom: 1px solid rgba(191, 182, 160, .35); }
+
+/* Mixed woodtype, line by line, the way bills were set from whatever cases were full. */
+.act-name { color: var(--bone); }
+.act:nth-child(odd) .act-name { font: 800 clamp(2.2rem, 5.4vw, 3.6rem)/.92 var(--face-gothic); text-transform: uppercase; letter-spacing: .015em; }
+.act:nth-child(even) .act-name { font: 400 clamp(1.8rem, 4.2vw, 2.8rem)/.95 var(--face-fat); }
+.act-role { margin: .35em 0 0; font: italic 1.12rem/1.35 var(--face-roman); color: var(--bone); }
+.act-meta { margin: .3em 0 0; font: 600 .95rem/1.3 var(--face-gothic); letter-spacing: .14em; text-transform: uppercase; color: var(--bone-dim); }
+.act-meta q { font: italic 1.05rem var(--face-roman); letter-spacing: 0; text-transform: none; quotes: none; color: var(--bone); }
+
+.act-actions { display: flex; gap: var(--space-2); align-items: center; }
+.btn.hear { display: inline-flex; align-items: center; gap: .55em; padding-inline: 1.1rem; border-width: 1px; border-color: rgba(239, 229, 205, .55); }
+.btn.hear .icon { width: .85em; height: .85em; }
+.btn.hear[aria-pressed="true"] { background: var(--bone); color: var(--stock); border-color: var(--bone); }
+.btn.summon { min-width: 8.5rem; }
+
+.bill-foot {
+  margin-top: var(--space-5); text-align: center; color: var(--bone-dim);
+  font: 600 .9rem/1.6 var(--face-gothic); letter-spacing: .2em; text-transform: uppercase;
+}
+.bill-foot span + span::before { content: '·'; margin: 0 .8em; color: var(--oxblood); }
+
+@media (max-width: 720px) {
+  #summon.active { padding: 64px 10px 32px; }
+  .act { grid-template-columns: 1fr; }
+  .act-actions { margin-top: var(--space-2); }
+  .act-actions .btn { flex: 1; }
+  .snipe { top: 22px; right: -74px; font-size: .78rem; }
+}

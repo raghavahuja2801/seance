@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="ink.css">
   <link rel="stylesheet" href="seance.css">
+  <link rel="stylesheet" href="bill.css">
 </head>
 <body aria-busy="true">
   <div class="brand">
@@ -47,12 +48,20 @@
   </div>
 
   <main>
-    <!-- 1. Choose a spirit -->
+    <!-- 1. The bill: who is appearing tonight -->
     <section id="summon" class="screen" aria-labelledby="title">
-      <h1 id="title">Séance</h1>
-      <p class="lede">Light the candles. Lay your fingers on the planchette. Choose whom to call&nbsp;back.</p>
-      <ul id="ghosts" class="ghosts" aria-label="Spirits"></ul>
-      <p class="fine">Speak to the spirit, and it will answer in its own voice. Learn how it truly died, and it may find&nbsp;peace.</p>
+      <article class="bill">
+        <p class="snipe" aria-hidden="true"><svg class="icon"><use href="#i-star"/></svg>Tonight only<svg class="icon"><use href="#i-star"/></svg></p>
+        <header class="bill-head">
+          <h1 id="title" class="bill-title fat ink print">Séance</h1>
+          <p class="band print" style="--d:.15s">An evening with the departed</p>
+          <p class="ritual print" style="--d:.3s">Speak to the spirit, and it will answer in its own voice. Learn how it truly died, and it may find&nbsp;peace.</p>
+        </header>
+        <div class="ornament-rule" aria-hidden="true"><svg class="icon"><use href="#i-fleuron"/></svg></div>
+        <h2 class="acts-title">Appearing tonight</h2>
+        <ol id="ghosts" class="acts"></ol>
+        <p class="bill-foot"><span>Admission free</span><span>Microphone required</span><span>Voices by Fish&nbsp;Audio Drama&nbsp;3</span></p>
+      </article>
     </section>
 
     <!-- 2. The séance -->
