@@ -8,3 +8,7 @@ node_modules/
 # Generated audio
 runs/
 
+
+# impeccable working files (review captures, question pages); the surface brief is committed
+.impeccable/review/
+.impeccable/questions/
