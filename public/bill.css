@@ -24,7 +24,7 @@
 
 .bill-head { text-align: center; }
 /* World-earned exception to the 6rem display cap: the bill's title is woodtype set to the full measure. */
-.bill-title { font-size: clamp(4rem, 15vw, 9.5rem); color: var(--bone); letter-spacing: .02em; }
+.bill-title { font-size: clamp(3.4rem, min(15vw, 13vh), 9.5rem); color: var(--bone); letter-spacing: .02em; }
 .band {
   margin: var(--space-4) calc(-1 * clamp(20px, 6vw, 72px)) 0; padding: .55em 1em;
   background: var(--oxblood); color: var(--bone);
@@ -35,11 +35,13 @@
   font: italic clamp(1.15rem, 2.4vw, 1.4rem)/1.45 var(--face-roman); color: var(--bone);
 }
 
-.ornament-rule { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-5) 0 var(--space-4); color: var(--bone-dim); }
-.ornament-rule::before, .ornament-rule::after { content: ''; flex: 1; height: 0; border-top: 1px solid currentColor; border-bottom: 3px double currentColor; padding-top: 3px; }
-.ornament-rule .icon { width: 44px; height: 22px; color: var(--oxblood); }
-
-.acts-title { text-align: center; font: 600 1rem/1 var(--face-gothic); letter-spacing: .4em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: var(--space-3); }
+.acts-title {
+  display: flex; align-items: center; gap: var(--space-3); margin: clamp(20px, 4vh, 40px) 0 var(--space-3);
+  font: 600 1rem/1 var(--face-gothic); letter-spacing: .4em; text-transform: uppercase; color: var(--bone-dim);
+}
+.acts-title::before, .acts-title::after { content: ''; flex: 1; height: 0; border-top: 1px solid currentColor; border-bottom: 3px double currentColor; padding-top: 3px; }
+.acts-title .icon { width: 40px; height: 20px; color: var(--oxblood); }
+.acts-title span { white-space: nowrap; }
 
 .acts { list-style: none; margin: 0; padding: 0; }
 .act {
@@ -64,10 +66,47 @@
 .btn.summon { min-width: 8.5rem; }
 
 .bill-foot {
-  margin-top: var(--space-5); text-align: center; color: var(--bone-dim);
+  margin-top: clamp(16px, 3vh, 40px); text-align: center; color: var(--bone-dim);
   font: 600 .9rem/1.6 var(--face-gothic); letter-spacing: .2em; text-transform: uppercase;
 }
 .bill-foot span + span::before { content: '·'; margin: 0 .8em; color: var(--oxblood); }
+
+/* ---------- Wide screens: a broadside, the acts set in columns ---------- */
+@media (min-width: 760px) {
+  .acts { display: grid; grid-template-columns: repeat(2, 1fr); }
+  /* Name, role, dates, then the buttons pinned to the cell's foot so each row's actions line up. */
+  .act { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: stretch; padding: clamp(10px, 1.8vh, 18px) var(--space-4); border-top: 1px solid rgba(191, 182, 160, .35); }
+  .act:last-child { border-bottom: none; }
+  .act:nth-child(2n) { border-left: 1px solid rgba(191, 182, 160, .35); }
+  .acts { border-bottom: 1px solid rgba(191, 182, 160, .35); }
+  .act-actions { margin-top: var(--space-2); align-self: end; }
+}
+@media (min-width: 1100px) {
+  #summon.active { padding: 64px 32px 16px; }
+  .bill { width: min(100%, 1360px); padding: clamp(28px, 4vh, 52px) clamp(40px, 5vw, 80px) clamp(24px, 3vh, 40px); }
+  .ritual { max-width: 82ch; margin-top: clamp(10px, 2vh, 22px); font-size: clamp(1.05rem, 1.25vw, 1.3rem); }
+  .band { margin-top: clamp(12px, 2.4vh, 24px); }
+  .acts { grid-template-columns: repeat(3, 1fr); }
+  .act:nth-child(2n) { border-left: none; }
+  .act:not(:nth-child(3n + 1)) { border-left: 1px solid rgba(191, 182, 160, .35); }
+  .act:nth-child(odd) .act-name { font-size: clamp(1.9rem, min(2.7vw, 5vh), 3rem); }
+  .act:nth-child(even) .act-name { font-size: clamp(1.3rem, min(1.75vw, 3.4vh), 2rem); white-space: nowrap; }
+  .snipe { top: 30px; right: -54px; }
+}
+
+/* Wide but short (laptops): tighten the vertical rhythm so the whole bill stands in one view. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  #summon.active { padding-top: 56px; padding-bottom: 8px; }
+  .bill { padding-top: 22px; padding-bottom: 18px; }
+  .band { padding: .45em 1em; font-size: 1.15rem; margin-top: 10px; }
+  .ritual { margin-top: 8px; font-size: 1.02rem; }
+  .acts-title { margin: 12px 0 6px; }
+  .act { padding-block: 8px; }
+  .act-role { font-size: 1rem; margin-top: .2em; }
+  .act-meta { font-size: .85rem; margin-top: .15em; }
+  .act-actions .btn { min-height: 40px; padding-block: .55rem; }
+  .bill-foot { margin-top: 10px; }
+}
 
 @media (max-width: 720px) {
   #summon.active { padding: 64px 10px 32px; }
