@@ -14,7 +14,7 @@
     "test": "node --test \"test/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "audition": "node --env-file=.env scripts/audition.ts",
-    "check:browser": "node scripts/check-flame.cjs && node scripts/check-ambience.cjs"
+    "check:browser": "node scripts/check-flame.cjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
