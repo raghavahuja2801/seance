@@ -42,7 +42,7 @@ if (agent) {
 }
 await fish('PATCH', `/v1/agent/agents/${agent.agent_id}`, { overrides_allowed: OVERRIDES_ALLOWED });
 
-const draft = await fish<{ config_hash: string; voice: Record<string, unknown> }>('GET', `/v1/agent/agents/${agent.agent_id}/config`);
+const draft = await fish<{ config_hash: string; voice: Record<string, unknown>; llm: { model: string } }>('GET', `/v1/agent/agents/${agent.agent_id}/config`);
 const { versions } = await fish<{ versions: { version_number: number; config_hash: string }[] }>(
   'GET',
   `/v1/agent/agents/${agent.agent_id}/versions?page_size=100`,
@@ -60,4 +60,5 @@ if (latest?.config_hash === draft.config_hash) {
 }
 
 if (draft.voice.tts_model !== 'drama-3') throw new Error(`voice.tts_model is ${String(draft.voice.tts_model)}, expected drama-3`);
+if (draft.llm.model !== agentConfig([]).llm.model) throw new Error(`llm.model is ${draft.llm.model}, expected ${agentConfig([]).llm.model}`);
 console.log(`\nSEANCE_AGENT_ID=${agent.agent_id}`);

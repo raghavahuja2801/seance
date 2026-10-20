@@ -57,6 +57,8 @@ export function agentConfig(toolIds: string[]) {
       expressive: true,
       voice_id: 'f3a2b90078d54a65af4b95f63bc7798e', // Sheila, a Drama 3 doc voice; ghosts override this
     },
+    // Pinned: tool use was tuned on this model (R-6..R-12); unset, a dashboard switch to GPT-4o went unnoticed (R-13).
+    llm: { model: 'google/gemini-3.6-flash' },
     conversation: { max_duration_seconds: 600 },
     tools: {
       enabled: true,
