@@ -225,6 +225,7 @@ async function summon(g, button) {
     const lighting = lightCandles();
 
     session = await AgentSession.start({ sessionToken: body, clientTools });
+    session.setOutputVolume(g.gain ?? 1); // some voices run hot; keep every spirit at a similar level
     await lighting;
     log('connected', session.sessionId, g.id);
     if (DEBUG) window.__session = session; // lets tests type to the spirit (see scripts/check-candles.cjs)
@@ -323,7 +324,7 @@ function hear(g, button) {
   const again = previewing === button;
   stopPreview();
   if (again) return;
-  preview.src = `voices/${g.id}.mp3`;
+  preview.src = `voices/${g.id}.mp3`; // previews are levelled at render time, so no gain here
   preview.play().catch((err) => log('preview failed', err?.message ?? String(err)));
   button.setAttribute('aria-pressed', 'true');
   previewing = button;
