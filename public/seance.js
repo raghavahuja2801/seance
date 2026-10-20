@@ -344,22 +344,21 @@ function renderGhosts(ghosts) {
 }
 
 // ---------- Loader ----------
-const LOADER_LINES = ['Drawing the curtains…', 'Lighting the candle…', 'Waking the spirits…'];
+const LOADER_LINES = ['Setting the type…', 'Inking the plates…', 'Pasting up the bill…'];
 async function boot() {
   const loader = $('loader');
   const fill = $('loader-fill');
   let done = 0;
-  const tick = (i) => () => {
+  const tick = () => {
     done++;
     fill.style.transform = `scaleX(${done / 3})`;
     $('loader-text').textContent = LOADER_LINES[Math.min(done, LOADER_LINES.length - 1)];
-    if (i === 0) loader.classList.add('lit');
   };
   try {
     const [, , ghosts] = await Promise.all([
-      document.fonts.ready.then(tick(0)),
-      import(SDK_URL).then((m) => { AgentSession = m.AgentSession; }).then(tick(1)),
-      fetch('/api/ghosts').then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then((g) => (tick(2)(), g)),
+      document.fonts.ready.then(tick),
+      import(SDK_URL).then((m) => { AgentSession = m.AgentSession; }).then(tick),
+      fetch('/api/ghosts').then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then((g) => (tick(), g)),
       sleep(REDUCED_MOTION ? 0 : 1600), // long enough to read as a ritual, not a flash
     ]);
     renderGhosts(ghosts);
